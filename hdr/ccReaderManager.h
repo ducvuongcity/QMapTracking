@@ -3,7 +3,6 @@
 
 #include <QList>
 #include <QFile>
-#include <QtConcurrent/QtConcurrentRun>
 
 #include "common.h"
 
@@ -11,27 +10,28 @@ class ccReaderManager : public QObject
 {
     Q_OBJECT
 
-    enum FinishedType {
-        CC_FINISHED_MMS,
-
-    };
-
 private:
+    static ccReaderManager *s_textReader;
     QList<ccPoint4D> mListMMS;
+    ccWorldFile mWorldFile;
 
-    void analysisMMS(QString path);
+    void analysisMMS(QString &path);
+    void analysisWorldFile(QString &path);
+    void resetWorldFile();
 
 public:
     explicit ccReaderManager(QObject *parent = 0);
+    ~ccReaderManager();
     static ccReaderManager *Instance();
-    QList<ccPoint4D> getListMMS();
+    QList<ccPoint4D> &getListMMS();
+    ccWorldFile &getWorldFile();
+    bool isValidWorldFile();
 
 signals:
-    void sgnReadFinish(FinishedType finishedType);
+    void sgnResponseReadFinished(int type, bool state);
 
 public slots:
-    void sltReadFileMMS(const QString &path);
-
+    void sltRequestReadHandle(const QString &path, int type);
 };
 
 #endif // CCREADERMANAGER_H

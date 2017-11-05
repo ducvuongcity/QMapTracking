@@ -2,15 +2,14 @@
 #define CCDIALOG_H
 
 #include <QApplication>
-#include <QString>
 #include <QWidget>
-#include <QObject>
 #include <QDialog>
 #include <QImage>
 #include <QPushButton>
 #include <QLineEdit>
 #include <QGraphicsView>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -24,13 +23,14 @@
 #include "ccReaderManager.h"
 #include "common.h"
 
-#define DEFAULD_PATH ""
+#define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData"
 
 class ccDialog : public QDialog
 {
     Q_OBJECT
 
 private:
+    QString mPathCurrentMap;
     QImage *imgMap = nullptr;
 
     QLineEdit *txtPath = nullptr;
@@ -48,13 +48,17 @@ public:
 
 private:
     void createScreen();
+    void signalMapping();
+    bool findFileTfw(QString &tfwFile);
+    bool renderMap();
 
 private slots:
     void sltLoadCoordinates();
     void sltLoadMap();
+    void sltResponseHandle(int type, bool state);
 
 signals:
-    void sgnRequestReadMMS(const QString &path);
+    void sgnRequestRead(const QString &path, int type);
 
 };
 
