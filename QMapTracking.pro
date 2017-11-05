@@ -15,3 +15,6 @@ HEADERS += \
     hdr/ccDialog.h \
     hdr/ccReaderManager.h \
     hdr/common.h
+
+INCLUDEPATH += hdr \
+    src
