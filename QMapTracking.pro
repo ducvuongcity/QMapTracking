@@ -8,10 +8,10 @@ TARGET = QMapTracking
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    ccDialog.cpp \
-    ccReaderManager.cpp
+    src/ccDialog.cpp \
+    src/ccReaderManager.cpp
 
 HEADERS += \
-    ccDialog.h \
-    ccReaderManager.h \
-    common.h
+    hdr/ccDialog.h \
+    hdr/ccReaderManager.h \
+    hdr/common.h
