@@ -1,6 +1,6 @@
 #include "ccDataManager.h"
 
-ccDataManager *ccDataManager::s_textReader = nullptr;
+ccDataManager *ccDataManager::s_dataManager = nullptr;
 
 ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
     resetWorldFile();
@@ -8,14 +8,14 @@ ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
 
 ccDataManager::~ccDataManager()
 {
-    MACRO_DEL_PTR(s_textReader);
+    MACRO_DEL_PTR(s_dataManager);
 }
 
 ccDataManager *ccDataManager::Instance()
 {
-    if (!s_textReader)
-        s_textReader = new ccDataManager();
-    return s_textReader;
+    if (!s_dataManager)
+        s_dataManager = new ccDataManager();
+    return s_dataManager;
 }
 
 void ccDataManager::sltRequestReadHandle(const QString &path, int type)
@@ -89,12 +89,13 @@ void ccDataManager::analysisWorldFile(QString &path)
                 mWorldFile.C = line.toDouble();
             else if (5 == lineCount)
                 mWorldFile.F = line.toDouble();
-            else {}
+            else
+                break;
 
             ++lineCount;
         }
         txtFile.close();
-        emit sgnResponseReadFinished(CC_TYPE_WORLDFILE, lineCount >= 6 ? true : false);
+        emit sgnResponseReadFinished(CC_TYPE_WORLDFILE, isValidWorldFile() && (lineCount == 6));
     }
     else {
         MACRO_DLOG << "Can't open file " << path;

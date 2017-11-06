@@ -11,7 +11,7 @@ class ccDataManager : public QObject
     Q_OBJECT
 
 private:
-    static ccDataManager *s_textReader;
+    static ccDataManager *s_dataManager;
     QList<ccPoint4D> mListMMS;
     ccWorldFile mWorldFile;
 
