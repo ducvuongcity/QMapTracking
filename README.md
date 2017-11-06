@@ -10,6 +10,7 @@ Yêu cầu:
 - Đọc file sample_DriveMMS.txt lấy ra 4 tọa độ X,Y,Z,T
 --Dùng 2 tọa độ X,Y vẽ quỹ tích MMS lên bản đồ (sample_Tizu.tif)
 -- Sau Khi vẽ quỹ tích MMS ấn vào 1 điểm chỉ định trên bản đồ (trùng với quỹ tích MMS) sẽ lấy ra 3 tọa độ x,y,z theo t (tạm thời cứ lấy ra 4 lable để task 2 sẽ dùng)
+
 Task 2: Liên kết Quỹ tích MMS và Ảnh chụp ô tô tự lái
 Input: 
 File ảnh 2D( ảnh chụp từ ô tô tự lái google)
