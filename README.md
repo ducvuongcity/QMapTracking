@@ -1,5 +1,5 @@
 # QMapTracking
-Task 1: Đọc Quỹ tích MMS
+#Task 1: Đọc Quỹ tích MMS#
 Input :  2 file
 -sample_Tizu.tif (Bản đồ)
 -sample_DriveMMS.txt ( Đường đi ô tô tự lái goole) 4 Cột X,Y,Z,T(x,y,z là tọa độ ô tô tại thời điểm t trên bản đồ)
@@ -11,7 +11,7 @@ Yêu cầu:
 --Dùng 2 tọa độ X,Y vẽ quỹ tích MMS lên bản đồ (sample_Tizu.tif)
 -- Sau Khi vẽ quỹ tích MMS ấn vào 1 điểm chỉ định trên bản đồ (trùng với quỹ tích MMS) sẽ lấy ra 3 tọa độ x,y,z theo t (tạm thời cứ lấy ra 4 lable để task 2 sẽ dùng)
 
-Task 2: Liên kết Quỹ tích MMS và Ảnh chụp ô tô tự lái
+#Task 2: Liên kết Quỹ tích MMS và Ảnh chụp ô tô tự lái#
 Input: 
 File ảnh 2D( ảnh chụp từ ô tô tự lái google)
 Đọc File tọa độ GPS ( ĐỊnh dạng .txt ) 7 cột( Trong đó có 1 cột GPS)
