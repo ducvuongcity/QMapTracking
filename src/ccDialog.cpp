@@ -11,14 +11,7 @@ ccDialog::ccDialog(QWidget *parent) : QDialog(parent)
 void ccDialog::createScreen()
 {
     setWindowTitle("Map Tracking");
-    setGeometry(
-                QStyle::alignedRect(
-                    Qt::LeftToRight,
-                    Qt::AlignCenter,
-                    QSize(640, 480),
-                    qApp->desktop()->availableGeometry()
-                    )
-                );
+    setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, QSize(640, 480), qApp->desktop()->availableGeometry()));
     imgMap = new QImage();
 
     txtPath = new QLineEdit(this);
