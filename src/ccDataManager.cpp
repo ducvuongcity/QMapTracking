@@ -1,32 +1,32 @@
-#include "ccReaderManager.h"
+#include "ccDataManager.h"
 
-ccReaderManager *ccReaderManager::s_textReader = nullptr;
+ccDataManager *ccDataManager::s_textReader = nullptr;
 
-ccReaderManager::ccReaderManager(QObject *parent) : QObject(parent) {
+ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
     resetWorldFile();
 }
 
-ccReaderManager::~ccReaderManager()
+ccDataManager::~ccDataManager()
 {
     MACRO_DEL_PTR(s_textReader);
 }
 
-ccReaderManager *ccReaderManager::Instance()
+ccDataManager *ccDataManager::Instance()
 {
     if (!s_textReader)
-        s_textReader = new ccReaderManager();
+        s_textReader = new ccDataManager();
     return s_textReader;
 }
 
-void ccReaderManager::sltRequestReadHandle(const QString &path, int type)
+void ccDataManager::sltRequestReadHandle(const QString &path, int type)
 {
     switch (type) {
     case CC_TYPE_MMS:
-        QtConcurrent::run(this, &ccReaderManager::analysisMMS, path);
+        QtConcurrent::run(this, &ccDataManager::analysisMMS, path);
         break;
 
     case CC_TYPE_WORLDFILE:
-        QtConcurrent::run(this, &ccReaderManager::analysisWorldFile, path);
+        QtConcurrent::run(this, &ccDataManager::analysisWorldFile, path);
         break;
 
     default:
@@ -34,7 +34,7 @@ void ccReaderManager::sltRequestReadHandle(const QString &path, int type)
     }
 }
 
-void ccReaderManager::analysisMMS(QString &path)
+void ccDataManager::analysisMMS(QString &path)
 {
     MACRO_THR_DLOG << "Read MMS";
     mListMMS.clear();
@@ -49,7 +49,7 @@ void ccReaderManager::analysisMMS(QString &path)
         {
             QString line = in.readLine();
             list = line.split(rx, QString::SkipEmptyParts);
-            if (list.size() < 4) {
+            if (list.size() != 4) {
                 MACRO_THR_DLOG << "MMS File incorrect";
                 emit sgnResponseReadFinished(CC_TYPE_MMS, false);
                 return;
@@ -65,7 +65,7 @@ void ccReaderManager::analysisMMS(QString &path)
     }
 }
 
-void ccReaderManager::analysisWorldFile(QString &path)
+void ccDataManager::analysisWorldFile(QString &path)
 {
     MACRO_THR_DLOG << "Read World File";
     resetWorldFile();
@@ -73,59 +73,55 @@ void ccReaderManager::analysisWorldFile(QString &path)
     if (txtFile.open(QIODevice::ReadOnly))
     {
         uint8_t lineCount = 0;
-        bool isCastSuccess = false;
         QTextStream in(&txtFile);
         while (!in.atEnd())
         {
             QString line = in.readLine();
             if (0 == lineCount)
-                mWorldFile.xPixelSize = line.toDouble(&isCastSuccess);
+                mWorldFile.A = line.toDouble();
             else if (1 == lineCount)
-                mWorldFile.yAxis = line.toDouble(&isCastSuccess);
+                mWorldFile.D = line.toDouble();
             else if (2 == lineCount)
-                mWorldFile.xAxis = line.toDouble(&isCastSuccess);
+                mWorldFile.B = line.toDouble();
             else if (3 == lineCount)
-                mWorldFile.yPixelSize = line.toDouble(&isCastSuccess);
+                mWorldFile.E = line.toDouble();
             else if (4 == lineCount)
-                mWorldFile.xCoordinate = line.toDouble(&isCastSuccess);
+                mWorldFile.C = line.toDouble();
             else if (5 == lineCount)
-                mWorldFile.yCoordinate = line.toDouble(&isCastSuccess);
+                mWorldFile.F = line.toDouble();
             else {}
 
             ++lineCount;
         }
         txtFile.close();
-        if (!isCastSuccess)
-            MACRO_DLOG << "Load error, please check WorldFile " << path;
-
-        emit sgnResponseReadFinished(CC_TYPE_WORLDFILE, (lineCount >= 6) && isCastSuccess ? true : false);
+        emit sgnResponseReadFinished(CC_TYPE_WORLDFILE, lineCount >= 6 ? true : false);
     }
     else {
         MACRO_DLOG << "Can't open file " << path;
     }
 }
 
-void ccReaderManager::resetWorldFile()
+void ccDataManager::resetWorldFile()
 {
-    mWorldFile.xPixelSize = 0;
-    mWorldFile.yPixelSize = 0;
-    mWorldFile.xAxis = 0;
-    mWorldFile.yAxis = 0;
-    mWorldFile.xCoordinate = 0;
-    mWorldFile.yCoordinate = 0;
+    mWorldFile.A = 0;
+    mWorldFile.E = 0;
+    mWorldFile.B = 0;
+    mWorldFile.D = 0;
+    mWorldFile.C = 0;
+    mWorldFile.F = 0;
 }
 
-QList<ccPoint4D> &ccReaderManager::getListMMS()
+QList<ccPoint4D> &ccDataManager::getListMMS()
 {
     return mListMMS;
 }
 
-ccWorldFile &ccReaderManager::getWorldFile()
+ccWorldFile &ccDataManager::getWorldFile()
 {
     return mWorldFile;
 }
 
-bool ccReaderManager::isValidWorldFile()
+bool ccDataManager::isValidWorldFile()
 {
-    return (mWorldFile.xPixelSize != 0.0f) && (mWorldFile.yPixelSize != 0.0f);
+    return (mWorldFile.A != 0.0f) && (mWorldFile.E != 0.0f);
 }

@@ -36,12 +36,12 @@ typedef struct {
 } ccPoint4D;
 
 typedef struct {
-    double xPixelSize;          //A
-    double yAxis;               //D
-    double xAxis;               //B
-    double yPixelSize;          //E
-    double xCoordinate;         //C
-    double yCoordinate;         //F
+    double A;
+    double D;
+    double B;
+    double E;
+    double C;
+    double F;
 } ccWorldFile;
 
 enum CommonEnum{

@@ -9,11 +9,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     src/ccDialog.cpp \
-    src/ccReaderManager.cpp
+    src/ccDataManager.cpp
 
 HEADERS += \
     hdr/ccDialog.h \
-    hdr/ccReaderManager.h \
+    hdr/ccDataManager.h \
     hdr/common.h
 
 INCLUDEPATH += hdr \

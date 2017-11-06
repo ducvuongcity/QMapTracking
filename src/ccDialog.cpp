@@ -3,21 +3,9 @@
 ccDialog::ccDialog(QWidget *parent) : QDialog(parent)
 {
     MACRO_THR_DLOG << "GUI Thread";
-    ccReaderManager::Instance();
+    ccDataManager::Instance();
     createScreen();
     signalMapping();
-}
-
-ccDialog::~ccDialog()
-{
-    MACRO_DEL_PTR(imgMap);
-    MACRO_DEL_PTR(txtPath);
-    MACRO_DEL_PTR(btnLoadCoordinates);
-    MACRO_DEL_PTR(btnLoadMap);
-    MACRO_DEL_PTR(lblMap);
-    MACRO_DEL_PTR(scrMap);
-    MACRO_DEL_PTR(verticalLayout);
-    MACRO_DEL_PTR(horizontalLayout);
 }
 
 void ccDialog::createScreen()
@@ -59,8 +47,8 @@ void ccDialog::signalMapping()
 {
     QObject::connect(btnLoadCoordinates, SIGNAL(clicked(bool)), this, SLOT(sltLoadCoordinates()), Qt::UniqueConnection);
     QObject::connect(btnLoadMap, SIGNAL(clicked(bool)), this, SLOT(sltLoadMap()), Qt::UniqueConnection);
-    QObject::connect(this, SIGNAL(sgnRequestRead(const QString&, int)), ccReaderManager::Instance(), SLOT(sltRequestReadHandle(const QString&, int)), Qt::UniqueConnection);
-    QObject::connect(ccReaderManager::Instance(), SIGNAL(sgnResponseReadFinished(int,bool)), this, SLOT(sltResponseHandle(int,bool)), Qt::UniqueConnection);
+    QObject::connect(this, SIGNAL(sgnRequestRead(const QString&, int)), ccDataManager::Instance(), SLOT(sltRequestReadHandle(const QString&, int)), Qt::UniqueConnection);
+    QObject::connect(ccDataManager::Instance(), SIGNAL(sgnResponseReadFinished(int,bool)), this, SLOT(sltResponseHandle(int,bool)), Qt::UniqueConnection);
 }
 
 bool ccDialog::findFileTfw(QString &tfwFile)
@@ -85,7 +73,7 @@ void ccDialog::sltLoadCoordinates()
 
 void ccDialog::sltLoadMap()
 {
-    mPathCurrentMap = QFileDialog::getOpenFileName(this, "Open Map File", QString::fromStdString(DEFAULD_PATH), "Image File(*.*)");
+    mPathCurrentMap = QFileDialog::getOpenFileName(this, "Open Map File", QString::fromStdString(DEFAULD_PATH), "Image File(*.tif)");
     if (!mPathCurrentMap.isEmpty())
     {
         QString tfwFile;
@@ -119,22 +107,20 @@ void ccDialog::sltResponseHandle(int type, bool state)
 
 bool ccDialog::renderMap()
 {
-    this->metaObject()->className();
-    MACRO_THR_DLOG << ccReaderManager::Instance()->isValidWorldFile() << ccReaderManager::Instance()->getListMMS().size() << !imgMap->isNull();
-    if(ccReaderManager::Instance()->isValidWorldFile() && ccReaderManager::Instance()->getListMMS().size() > 0 && !imgMap->isNull()) {
+    MACRO_THR_DLOG << ccDataManager::Instance()->isValidWorldFile() << ccDataManager::Instance()->getListMMS().size() << !imgMap->isNull();
+    if(ccDataManager::Instance()->isValidWorldFile() && ccDataManager::Instance()->getListMMS().size() > 0 && !imgMap->isNull()) {
         MACRO_THR_DLOG << "Render start!";
-        double A = ccReaderManager::Instance()->getWorldFile().xPixelSize;
-        double B = ccReaderManager::Instance()->getWorldFile().xAxis;
-        double C = ccReaderManager::Instance()->getWorldFile().xCoordinate;
-        double D = ccReaderManager::Instance()->getWorldFile().yAxis;
-        double E = ccReaderManager::Instance()->getWorldFile().yPixelSize;
-        double F = ccReaderManager::Instance()->getWorldFile().yCoordinate;
 
-        for(int i = 0; i < ccReaderManager::Instance()->getListMMS().size(); ++i) {
-            double xMap = ccReaderManager::Instance()->getListMMS().at(i).x;
-            double yMap = ccReaderManager::Instance()->getListMMS().at(i).y;
-            int x = (int)(E*xMap - B*yMap + B*F - E*C)/(A*E - D*B);
-            int y = (int)(-D*xMap + A*yMap + D*C - A*F)/(A*E - D*B);
+        ccWorldFile worldFile = ccDataManager::Instance()->getWorldFile();
+
+        for(int i = 0; i < ccDataManager::Instance()->getListMMS().size(); ++i) {
+            double xMap = ccDataManager::Instance()->getListMMS().at(i).x;
+            double yMap = ccDataManager::Instance()->getListMMS().at(i).y;
+            int x = (int)(worldFile.E*xMap - worldFile.B*yMap + worldFile.B*worldFile.F - worldFile.E*worldFile.C)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
+            int y = (int)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
+
+            if(x >= imgMap->width() || y >= imgMap->height())
+                break;
 
             imgMap->setPixel(x, y, COLOR_LINE);
         }

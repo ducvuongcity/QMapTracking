@@ -1,17 +1,17 @@
-#ifndef CCREADERMANAGER_H
-#define CCREADERMANAGER_H
+#ifndef CCDATAMANAGER_H
+#define CCDATAMANAGER_H
 
 #include <QList>
 #include <QFile>
 
 #include "common.h"
 
-class ccReaderManager : public QObject
+class ccDataManager : public QObject
 {
     Q_OBJECT
 
 private:
-    static ccReaderManager *s_textReader;
+    static ccDataManager *s_textReader;
     QList<ccPoint4D> mListMMS;
     ccWorldFile mWorldFile;
 
@@ -20,9 +20,9 @@ private:
     void resetWorldFile();
 
 public:
-    explicit ccReaderManager(QObject *parent = 0);
-    ~ccReaderManager();
-    static ccReaderManager *Instance();
+    explicit ccDataManager(QObject *parent = 0);
+    ~ccDataManager();
+    static ccDataManager *Instance();
     QList<ccPoint4D> &getListMMS();
     ccWorldFile &getWorldFile();
     bool isValidWorldFile();
@@ -34,4 +34,4 @@ public slots:
     void sltRequestReadHandle(const QString &path, int type);
 };
 
-#endif // CCREADERMANAGER_H
+#endif // CCDATAMANAGER_H

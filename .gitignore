@@ -1,3 +1,5 @@
 # user pro
 *.pro.user
 
+QMapTracking/Debug*
+QMapTracking/Release*

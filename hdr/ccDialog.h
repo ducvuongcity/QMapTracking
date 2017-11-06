@@ -20,7 +20,7 @@
 #include <QStyle>
 #include <QDesktopWidget>
 
-#include "ccReaderManager.h"
+#include "ccDataManager.h"
 #include "common.h"
 
 #define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData"
@@ -44,7 +44,6 @@ private:
 
 public:
     explicit ccDialog(QWidget *parent = 0);
-    ~ccDialog();
 
 private:
     void createScreen();
