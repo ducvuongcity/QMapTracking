@@ -8,6 +8,9 @@
 #include <QRgb>
 #include <QtConcurrent/QtConcurrentRun>
 
+#include "ccBridge.h"
+#include "ccDataStore.h"
+
 #define MACRO_THR_DLOG      qDebug()    << "[" << QThread::currentThreadId() << "][" \
                                         << Q_FUNC_INFO << "]"
 

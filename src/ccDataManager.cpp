@@ -1,21 +1,21 @@
 #include "ccDataManager.h"
 
-ccDataManager *ccDataManager::s_dataManager = nullptr;
-
-ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
-    resetWorldFile();
+ccDataManager::ccDataManager(ccBridge &bridge, ccDataStore &store, QObject *parent)
+    : QObject(parent)
+    , m_bridge(bridge)
+    , m_dataStore(store)
+{
+    QObject::connect(m_bridge, SIGNAL(sgnEventToModel(QString)), this, SLOT(sltEvenHandle(QString)));
 }
 
 ccDataManager::~ccDataManager()
 {
-    MACRO_DEL_PTR(s_dataManager);
+
 }
 
-ccDataManager *ccDataManager::Instance()
+void ccDataManager::sltEvenHandle(QString event)
 {
-    if (!s_dataManager)
-        s_dataManager = new ccDataManager();
-    return s_dataManager;
+
 }
 
 void ccDataManager::sltRequestReadHandle(const QString &path, int type)
@@ -44,14 +44,22 @@ void ccDataManager::analysisMMS(QString &path)
     QRegExp rx("\\s+");
     if (txtFile.open(QIODevice::ReadOnly))
     {
+        int sizeOfFile = txtFile.size();
+        MACRO_THR_DLOG << "Size of file " << sizeOfFile;
+        int countSize = 0;
         QTextStream in(&txtFile);
+
+        m_bridge->sendEventToController(QString("evt_ReadMMS_Start()"));
+
         while (!in.atEnd())
         {
             QString line = in.readLine();
+            countSize += line.size();
+            m_bridge->sendEventToController(QString("evt_ReadMMS_Inprogress_UpdateValue(%1)").arg(100*countSize/sizeOfFile));
             list = line.split(rx, QString::SkipEmptyParts);
             if (list.size() != 4) {
                 MACRO_THR_DLOG << "MMS File incorrect";
-                emit sgnResponseReadFinished(CC_TYPE_MMS, false);
+                m_bridge->sendEventToController(QString("evt_ReadMMS_Finished(0)"));
                 return;
             }
             tempPoint.x = list.at(0).toDouble();
@@ -61,7 +69,7 @@ void ccDataManager::analysisMMS(QString &path)
             mListMMS.append(tempPoint);
         }
         txtFile.close();
-        emit sgnResponseReadFinished(CC_TYPE_MMS, true);
+        m_bridge->sendEventToController(QString("evt_ReadMMS_Finished(1)"));
     }
 }
 
@@ -72,6 +80,8 @@ void ccDataManager::analysisWorldFile(QString &path)
     QFile txtFile(path);;
     if (txtFile.open(QIODevice::ReadOnly))
     {
+        m_bridge->sendEventToController(QString("evt_ReadWorldFile_Start()"));
+
         uint8_t lineCount = 0;
         QTextStream in(&txtFile);
         while (!in.atEnd())
@@ -95,7 +105,7 @@ void ccDataManager::analysisWorldFile(QString &path)
             ++lineCount;
         }
         txtFile.close();
-        emit sgnResponseReadFinished(CC_TYPE_WORLDFILE, isValidWorldFile() && (lineCount == 6));
+        m_bridge->sendEventToController(QString("evt_ReadWorldFile_Finish()"));
     }
     else {
         MACRO_DLOG << "Can't open file " << path;
@@ -112,17 +122,9 @@ void ccDataManager::resetWorldFile()
     mWorldFile.F = 0;
 }
 
-QList<ccPoint4D> &ccDataManager::getListMMS()
+void ccDataManager::setListPixel(const QList<QPoint> &list)
 {
-    return mListMMS;
-}
-
-ccWorldFile &ccDataManager::getWorldFile()
-{
-    return mWorldFile;
-}
-
-bool ccDataManager::isValidWorldFile()
-{
-    return (mWorldFile.A != 0.0f) && (mWorldFile.E != 0.0f);
+    mListPixel.clear();
+    for (int i = 0; i < list.size(); ++i)
+        mListPixel.append(list.at(i));
 }

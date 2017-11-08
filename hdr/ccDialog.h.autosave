@@ -36,14 +36,14 @@ public:
 
 private:
     void createScreen();
-    void signalMapping();
+    void signalMappingWidget();
     bool findFileTfw(QString &tfwFile);
     bool renderMap();
     QPointF convertPixelToMMS(const QPoint &pixel);
 
 public slots:
     void sltEvenHandle(QString event);
-    void sltLoadCoordinates();
+    void sltLoadMMS();
     void sltLoadMap();
     void sltResponseHandle(int type, bool state);
     void sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &localPoint);

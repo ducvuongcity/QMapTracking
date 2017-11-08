@@ -65,7 +65,7 @@ void ccDialog::sltLoadMMS()
     if (!path.isEmpty())
     {
         txtPath->setText(path);
-        m_bridge->sendEventToController(QString("evt_LoadMMS_Req()"));
+        m_bridge->sendEventToController(QString("evt_LoadMMS_Req(%1)").arg(path));
     }
 }
 

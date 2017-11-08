@@ -9,12 +9,23 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     src/ccDialog.cpp \
-    src/ccDataManager.cpp
+    src/ccDataManager.cpp \
+    src/ccController.cpp \
+    src/widget/QMapContainer.cpp \
+    src/ccBridge.cpp \
+    src/ccDataStore.cpp
 
 HEADERS += \
+    hdr/common.h \
     hdr/ccDialog.h \
     hdr/ccDataManager.h \
-    hdr/common.h
+    hdr/ccController.h \
+    hdr/widget/QMapContainer.h \
+    hdr/ccBridge.h \
+    hdr/ccDataStore.h
 
 INCLUDEPATH += hdr \
-    src
+    hdr/widget \
+    src \
+    src/widget
+

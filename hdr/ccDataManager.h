@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QFile>
+#include <QPoint>
 
 #include "common.h"
 
@@ -11,27 +12,21 @@ class ccDataManager : public QObject
     Q_OBJECT
 
 private:
-    static ccDataManager *s_dataManager;
-    QList<ccPoint4D> mListMMS;
-    ccWorldFile mWorldFile;
-
     void analysisMMS(QString &path);
     void analysisWorldFile(QString &path);
-    void resetWorldFile();
+
+    void setListPixel(const QList<QPoint> &list);
 
 public:
-    explicit ccDataManager(QObject *parent = 0);
+    explicit ccDataManager(ccBridge &bridge, ccDataStore &store, QObject *parent = 0);
     ~ccDataManager();
-    static ccDataManager *Instance();
-    QList<ccPoint4D> &getListMMS();
-    ccWorldFile &getWorldFile();
-    bool isValidWorldFile();
-
-signals:
-    void sgnResponseReadFinished(int type, bool state);
 
 public slots:
-    void sltRequestReadHandle(const QString &path, int type);
+    void sltEvenHandle(QString event);
+
+private:
+    ccBridge *m_bridge;
+    ccDataStore *m_dataStore;
 };
 
 #endif // CCDATAMANAGER_H
