@@ -1,17 +1,16 @@
 #ifndef CCDATAMANAGER_H
 #define CCDATAMANAGER_H
 
-#include <QList>
 #include <QFile>
-#include <QPoint>
 
 #include "common.h"
+#include "ccDataStore.h"
 
 class ccDataManager : public QObject
 {
     Q_OBJECT
 
-private:
+public:
     void analysisMMS(QString &path);
     void analysisWorldFile(QString &path);
 

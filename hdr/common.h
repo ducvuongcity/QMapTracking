@@ -5,11 +5,12 @@
 #include <QThread>
 #include <QDebug>
 #include <QString>
+#include <QList>
 #include <QRgb>
+#include <QPoint>
 #include <QtConcurrent/QtConcurrentRun>
 
 #include "ccBridge.h"
-#include "ccDataStore.h"
 
 #define MACRO_THR_DLOG      qDebug()    << "[" << QThread::currentThreadId() << "][" \
                                         << Q_FUNC_INFO << "]"

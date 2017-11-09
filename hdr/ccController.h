@@ -12,12 +12,15 @@ class ccController : public QObject
 {
     Q_OBJECT
 public:
-    explicit ccController(ccDataManager &model, ccDialog &view, ccBridge &bridge, QObject *parent = 0);
+    explicit ccController(ccBridge &bridge, ccDataManager &model, ccDialog &view, QObject *parent = 0);
 
 signals:
 
 public slots:
     void sltEvenHandle(QString event);
+
+private:
+    QStringList getEventParameter(QString eventWithParam, QString &eventName);
 
 private:
     ccBridge *m_bridge;

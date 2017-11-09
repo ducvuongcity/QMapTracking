@@ -2,8 +2,8 @@
 
 ccDialog::ccDialog(ccBridge &bridge, ccDataStore &data, QWidget *parent)
     : QDialog(parent)
-    , m_bridge(bridge)
-    , m_dataStore(data)
+    , m_bridge(&bridge)
+    , m_dataStore(&data)
 {
     MACRO_THR_DLOG << "GUI Thread";
     createScreen();
@@ -38,8 +38,9 @@ void ccDialog::createScreen()
     verticalLayout->addLayout(horizontalLayout);
     verticalLayout->addWidget(scrMap);
 
-    progressDialog = new QProgressDialog(this);
-    progressDialog->setRange(0, 100);
+//    progressDialog = new QProgressDialog(this);
+//    progressDialog->setRange(0, 100);
+//    progressDialog->hide();
 }
 
 void ccDialog::signalMappingWidget()
@@ -65,7 +66,7 @@ void ccDialog::sltLoadMMS()
     if (!path.isEmpty())
     {
         txtPath->setText(path);
-        m_bridge->sendEventToController(QString("evt_LoadMMS_Req()"));
+        m_bridge->sendEventToController(QString("evt_View_LoadMMS_Req(%1)").arg(path));
     }
 }
 
@@ -78,7 +79,7 @@ void ccDialog::sltLoadMap()
         if (findFileTfw(tfwFile)) {
             imgMap->load(mPathCurrentMap);
             lblMap->setPixmap(QPixmap::fromImage(*imgMap));
-            m_bridge->sendEventToController(QString("evt_LoadWorldFile_Req(%1)").arg(tfwFile));
+            m_bridge->sendEventToController(QString("evt_View_LoadWorldFile_Req(%1)").arg(tfwFile));
         }
         else
             QMessageBox::critical(this, "Can't load map", "Can't load map because TFW file not found!");
@@ -101,51 +102,56 @@ void ccDialog::sltResponseHandle(int type, bool state)
     default:
         break;
     }
-    progressDialog->close();
+//    progressDialog->close();
 }
 
 void ccDialog::sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &localPoint)
 {
-    if(ccDataManager::Instance()->getListPixel().contains(localPoint))
-        QToolTip::showText(globalPoint, QString("%1, %2").arg(convertPixelToMMS(localPoint).x()).arg(convertPixelToMMS(localPoint).y()));
+//    if(ccDataManager::Instance()->getListPixel().contains(localPoint))
+//        QToolTip::showText(globalPoint, QString("%1, %2").arg(convertPixelToMMS(localPoint).x()).arg(convertPixelToMMS(localPoint).y()));
 }
 
 void ccDialog::sgnResponseReadStart(){
-    progressDialog->show();
+//    progressDialog->show();
 }
 
 bool ccDialog::renderMap()
 {
-    MACRO_THR_DLOG << ccDataManager::Instance()->isValidWorldFile() << ccDataManager::Instance()->getListMMS().size() << !imgMap->isNull();
-    if(ccDataManager::Instance()->isValidWorldFile() && ccDataManager::Instance()->getListMMS().size() > 0 && !imgMap->isNull()) {
-        MACRO_THR_DLOG << "Render start!";
+//    MACRO_THR_DLOG << ccDataManager::Instance()->isValidWorldFile() << ccDataManager::Instance()->getListMMS().size() << !imgMap->isNull();
+//    if(ccDataManager::Instance()->isValidWorldFile() && ccDataManager::Instance()->getListMMS().size() > 0 && !imgMap->isNull()) {
+//        MACRO_THR_DLOG << "Render start!";
 
-        ccWorldFile worldFile = ccDataManager::Instance()->getWorldFile();
-        QList<QPoint> listPixel;
+//        ccWorldFile worldFile = ccDataManager::Instance()->getWorldFile();
+//        QList<QPoint> listPixel;
 
-        for(int i = 0; i < ccDataManager::Instance()->getListMMS().size(); ++i) {
-            double xMap = ccDataManager::Instance()->getListMMS().at(i).x;
-            double yMap = ccDataManager::Instance()->getListMMS().at(i).y;
-            int x = (int)(worldFile.E*xMap - worldFile.B*yMap + worldFile.B*worldFile.F - worldFile.E*worldFile.C)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
-            int y = (int)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
+//        for(int i = 0; i < ccDataManager::Instance()->getListMMS().size(); ++i) {
+//            double xMap = ccDataManager::Instance()->getListMMS().at(i).x;
+//            double yMap = ccDataManager::Instance()->getListMMS().at(i).y;
+//            int x = (int)(worldFile.E*xMap - worldFile.B*yMap + worldFile.B*worldFile.F - worldFile.E*worldFile.C)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
+//            int y = (int)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
 
-            if(x >= imgMap->width() || y >= imgMap->height())
-                break;
+//            if(x >= imgMap->width() || y >= imgMap->height())
+//                break;
 
-            imgMap->setPixel(x, y, COLOR_LINE);
-            listPixel.append(QPoint(x, y));
-        }
-        MACRO_THR_DLOG << "Render done!";
-        ccDataManager::Instance()->setListPixel(listPixel);
-        lblMap->setPixmap(QPixmap::fromImage(*imgMap));
-        return true;
-    }
-    return false;
+//            imgMap->setPixel(x, y, COLOR_LINE);
+//            listPixel.append(QPoint(x, y));
+//        }
+//        MACRO_THR_DLOG << "Render done!";
+//        ccDataManager::Instance()->setListPixel(listPixel);
+//        lblMap->setPixmap(QPixmap::fromImage(*imgMap));
+//        return true;
+//    }
+//    return false;
 }
 
 QPointF ccDialog::convertPixelToMMS(const QPoint &pixel)
 {
-    ccWorldFile worldFile = ccDataManager::Instance()->getWorldFile();
-    return QPoint(worldFile.A*pixel.x() + worldFile.B*pixel.y() + worldFile.C,
-                  worldFile.D*pixel.x() + worldFile.E*pixel.y() + worldFile.F);
+//    ccWorldFile worldFile = ccDataManager::Instance()->getWorldFile();
+//    return QPoint(worldFile.A*pixel.x() + worldFile.B*pixel.y() + worldFile.C,
+    //                  worldFile.D*pixel.x() + worldFile.E*pixel.y() + worldFile.F);
+}
+
+void ccDialog::sltEvenHandle(QString event)
+{
+
 }

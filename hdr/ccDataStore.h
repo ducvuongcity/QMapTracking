@@ -9,8 +9,8 @@ class ccDataStore : public QObject
 public:
     explicit ccDataStore(QObject *parent = 0);
 
-    QList<ccPoint4D> &getListMMS() const;
-    ccWorldFile &getWorldFile() const;
+    QList<ccPoint4D> &getListMMS();
+    ccWorldFile &getWorldFile();
     QList<QPoint> &getListPixel();
     bool isValidWorldFile();
 
@@ -18,6 +18,7 @@ private:
     QList<ccPoint4D> m_listMMS;
     QList<QPoint> m_listPixel;
     ccWorldFile m_worldFile;
+
 };
 
 #endif // CCDATASTORE_H

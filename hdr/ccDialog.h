@@ -23,6 +23,7 @@
 
 #include "QMapContainer.h"
 #include "ccDataManager.h"
+#include "ccDataStore.h"
 #include "common.h"
 
 #define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData"
@@ -36,14 +37,14 @@ public:
 
 private:
     void createScreen();
-    void signalMapping();
+    void signalMappingWidget();
     bool findFileTfw(QString &tfwFile);
     bool renderMap();
     QPointF convertPixelToMMS(const QPoint &pixel);
 
 public slots:
     void sltEvenHandle(QString event);
-    void sltLoadCoordinates();
+    void sltLoadMMS();
     void sltLoadMap();
     void sltResponseHandle(int type, bool state);
     void sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &localPoint);
@@ -65,7 +66,7 @@ private:
     QVBoxLayout *verticalLayout = nullptr;
     QHBoxLayout *horizontalLayout = nullptr;
 
-    QProgressDialog *progressDialog;
+//    QProgressDialog *progressDialog;
 
 };
 

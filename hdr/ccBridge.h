@@ -8,9 +8,9 @@ class ccBridge : public QObject
     Q_OBJECT
 public:
     explicit ccBridge(QObject *parent = 0);
-    void sendEventToController(QString send = "", QString event);
-    void sendEventToModel(QString send = "", QString event);
-    void sendEventToView(QString send = "", QString event);
+    void sendEventToController(QString event);
+    void sendEventToModel(QString event);
+    void sendEventToView(QString event);
 
 signals:
     void sgnEventToController(QString event);
