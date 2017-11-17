@@ -1,12 +1,12 @@
 #include "ccController.h"
 
-ccController::ccController(ccBridge &bridge, ccDataManager &model, ccDialog &view, QObject *parent)
+ccController::ccController(ccDataManager &model, ccDialog &view, QObject *parent)
     : QObject(parent)
-    , m_bridge(&bridge)
     , m_model(&model)
     , m_view(&view)
 {
-    connect(m_bridge, SIGNAL(sgnEventToController(QString)), this, SLOT(sltEvenHandle(QString)));
+    QObject::connect(m_model, SIGNAL(sgnEvent(QString)), this, SLOT(sltEvenHandle(QString)));
+    QObject::connect(m_view, SIGNAL(sgnEvent(QString)), this, SLOT(sltEvenHandle(QString)));
 }
 
 void ccController::sltEvenHandle(QString event)
@@ -15,15 +15,31 @@ void ccController::sltEvenHandle(QString event)
     QString eventName;
     params = getEventParameter(event, eventName);
 
-    if(eventName == "evt_View_LoadMMS_Req") {
+    MACRO_THR_DLOG << "Receive event " << eventName;
+
+    switch (eventMap.key(eventName)) {
+    case CC_EVT_HMI_READMMS_REQUEST:
         QtConcurrent::run(m_model, m_model->analysisMMS, params[0]);
-    }
-    else if (eventName == "") {
+        break;
 
-    }
-    else if (eventName == "") {
+    case CC_EVT_HMI_READWORLDFILE_REQUEST:
+        QtConcurrent::run(m_model, m_model->analysisWorldFile, params[0]);
+        break;
 
+    case CC_EVT_MODEL_READMMS_RESPONSE:
+        if (params[0].toInt()) {
+            QtConcurrent::run(m_view, &ccDialog::renderMap);
+        }
+
+    case CC_EVT_MODEL_READWORLDFILE_RESPONSE:
+        if(params[0].toInt())
+            QtConcurrent::run(m_view, &ccDialog::renderMap);
+        break;
+
+    default:
+        break;
     }
+
 }
 
 QStringList ccController::getEventParameter(QString eventWithParam, QString &eventName)
@@ -37,4 +53,3 @@ QStringList ccController::getEventParameter(QString eventWithParam, QString &eve
 
     return paramsString.split(",");
 }
-

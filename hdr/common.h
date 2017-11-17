@@ -5,12 +5,8 @@
 #include <QThread>
 #include <QDebug>
 #include <QString>
-#include <QList>
 #include <QRgb>
-#include <QPoint>
 #include <QtConcurrent/QtConcurrentRun>
-
-#include "ccBridge.h"
 
 #define MACRO_THR_DLOG      qDebug()    << "[" << QThread::currentThreadId() << "][" \
                                         << Q_FUNC_INFO << "]"
@@ -49,12 +45,21 @@ typedef struct {
 } ccWorldFile;
 
 enum CommonEnum{
-    CC_TYPE_MMS = 0x00,
-    CC_TYPE_WORLDFILE,
+    CC_EVT_HMI_READMMS_REQUEST = 0x1000,
+    CC_EVT_HMI_READWORLDFILE_REQUEST,
 
-    CC_REQUEST_RENDER_MAP = 0x10,
-
+    CC_EVT_MODEL_READMMS_RESPONSE = 0x2000,
+    CC_EVT_MODEL_READWORLDFILE_RESPONSE,
+    CC_EVT_MODEL_UPDATEPROGRESS_RESPONSE,
 };
 
+const QHash <CommonEnum, QString> eventMap = {
+    {CC_EVT_HMI_READMMS_REQUEST,                "evt_HMI_ReadMMS_Req"},
+    {CC_EVT_HMI_READWORLDFILE_REQUEST,          "evt_HMI_ReadWorldFile_Req"},
+
+    {CC_EVT_MODEL_READMMS_RESPONSE,             "evt_Model_ReadMMS_Res"},
+    {CC_EVT_MODEL_READWORLDFILE_RESPONSE,         "evt_Model_ReadWorldFile_Res"},
+    {CC_EVT_MODEL_UPDATEPROGRESS_RESPONSE,      "evt_Model_UpdateProgress_Res"}
+};
 #endif // COMMON
 

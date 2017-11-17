@@ -1,16 +1,14 @@
 #include "ccDialog.h"
+#include "ccDataManager.h"
 #include "ccController.h"
-#include "ccBridge.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    ccBridge bridge;
-    ccDataStore store;
-    ccDialog view(bridge, store);
-    ccDataManager model(bridge, store);
-    ccController controller(bridge, model, view);
+    ccDataManager model;
+    ccDialog view(model);
+    ccController control(model, view);
 
     view.show();
 
