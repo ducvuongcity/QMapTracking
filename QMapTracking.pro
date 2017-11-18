@@ -12,6 +12,7 @@ SOURCES += main.cpp \
     src/ccDataManager.cpp \
     src/ccController.cpp \
     src/widget/QMapContainer.cpp \
+    src/widget/ccImageView.cpp \
     src/ccDataBuilerImage2DInfo.cpp \
     src/ccDialog.cpp
 
@@ -21,6 +22,7 @@ HEADERS += \
     hdr/ccController.h \
     hdr/common.h \
     hdr/widget/QMapContainer.h \
+    hdr/widget/ccImageView.h \
     hdr/ccDataBuilerImage2DInfo.h \
     hdr/ccDialog.h
 
