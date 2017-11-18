@@ -36,7 +36,8 @@ public:
     void setListPixel(const QList<QPoint> &list);
     bool isValidWorldFile();
 // ADD-START QMapTracking 2017.11.18 dhthong
-    bool NotifyChange2DImageInfo(QString &path);
+    bool notifyChange2DImageInfo(QString &path);
+    bool requestFindImagePathByTime(double time, QString &strResult);
 // ADD-END QMapTracking 2017,11.18 dhthong
 signals:
     void sgnResponseReadFinished(int type, bool state);
