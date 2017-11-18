@@ -170,7 +170,7 @@ void ccDialog::sltSet2DImageInfo()
 
         if( nullptr != m_model )
         {
-            m_model->NotifyChange2DImageInfo(path);
+            m_model->notifyChange2DImageInfo(path);
         }
         else
         {

@@ -10,7 +10,7 @@ ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
 ccDataManager::~ccDataManager()
 {
 // ADD-START QMapTracking 2017.11.18 dhthong
-    if(nullptr == m_pDBImage2DInfo)
+    if(nullptr != m_pDBImage2DInfo)
     {
         delete m_pDBImage2DInfo;
         m_pDBImage2DInfo = nullptr;
@@ -136,7 +136,7 @@ bool ccDataManager::isValidWorldFile()
 }
 
 // ADD-START QMapTracking 2017.11.18 dhthong
-bool ccDataManager::NotifyChange2DImageInfo(QString &path)
+bool ccDataManager::notifyChange2DImageInfo(QString &path)
 {
     bool bRet = false;
     if(nullptr != m_pDBImage2DInfo)
@@ -146,6 +146,16 @@ bool ccDataManager::NotifyChange2DImageInfo(QString &path)
     else
     {
         // debug log
+    }
+    return bRet;
+}
+
+bool ccDataManager::requestFindImagePathByTime(double time, QString &strResult)
+{
+    bool bRet = false;
+    if(nullptr != m_pDBImage2DInfo)
+    {
+        m_pDBImage2DInfo->findPathByTime(time, strResult);
     }
     return bRet;
 }
