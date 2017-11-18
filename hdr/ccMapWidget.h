@@ -22,6 +22,7 @@
 #include "QMapContainer.h"
 #include "ccDataManager.h"
 #include "common.h"
+#include "ccImageView.h"
 
 #define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData"
 
@@ -44,8 +45,9 @@ private:
     QMapContainer *lblMap = nullptr;
     QScrollArea *scrMap = nullptr;
 
-    QLabel *lblImage = nullptr;
+    QGraphicsView *lblImage = nullptr;
     QScrollArea *scrImage = nullptr;
+    ccImageView *sceneImage;
 
     QVBoxLayout *verticalLayout = nullptr;
     QHBoxLayout *horizontalLayout = nullptr;

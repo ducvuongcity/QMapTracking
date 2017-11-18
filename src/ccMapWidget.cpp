@@ -34,7 +34,9 @@ void ccMapWidget::createScreen()
     scrMap->setWidgetResizable(true);
     scrMap->setWidget(lblMap);
 
-    lblImage = new QLabel(this);
+    lblImage = new QGraphicsView(this);
+    sceneImage = new ccImageView(this);
+    lblImage->setScene(sceneImage);
     scrImage = new QScrollArea(this);
     scrImage->setWidgetResizable(true);
     scrImage->setWidget(lblImage);
