@@ -8,19 +8,21 @@ TARGET = QMapTracking
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    src/ccDialog.cpp \
+    src/ccMapWidget.cpp \
     src/ccDataManager.cpp \
     src/ccController.cpp \
     src/widget/QMapContainer.cpp \
-    src/ccDataBuilerImage2DInfo.cpp
+    src/ccDataBuilerImage2DInfo.cpp \
+    src/ccDialog.cpp
 
 HEADERS += \
-    hdr/ccDialog.h \
+    hdr/ccMapWidget.h \
     hdr/ccDataManager.h \
     hdr/ccController.h \
     hdr/common.h \
     hdr/widget/QMapContainer.h \
-    hdr/ccDataBuilerImage2DInfo.h
+    hdr/ccDataBuilerImage2DInfo.h \
+    hdr/ccDialog.h
 
 INCLUDEPATH += hdr \
     hdr/widget \

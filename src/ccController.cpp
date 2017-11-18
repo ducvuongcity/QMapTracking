@@ -1,9 +1,9 @@
 #include "ccController.h"
 
-ccController::ccController(ccDataManager &model, ccDialog &view, QObject *parent)
+ccController::ccController(ccDataManager *model, ccMapWidget *view, QObject *parent)
     : QObject(parent)
-    , m_model(&model)
-    , m_view(&view)
+    , m_model(model)
+    , m_view(view)
 {
     QObject::connect(m_model, SIGNAL(sgnEvent(EventList,QString)), this, SLOT(sltEvenHandle(EventList,QString)));
     QObject::connect(m_view, SIGNAL(sgnEvent(EventList,QString)), this, SLOT(sltEvenHandle(EventList,QString)));
@@ -26,12 +26,12 @@ void ccController::sltEvenHandle(EventList event, QString params)
 
     case CC_EVT_MODEL_READMMS_RESPONSE:
         if (paramList[0].toInt()) {
-            QtConcurrent::run(m_view, &ccDialog::renderMap);
+            QtConcurrent::run(m_view, &ccMapWidget::renderMap);
         }
 
     case CC_EVT_MODEL_READWORLDFILE_RESPONSE:
         if(paramList[0].toInt())
-            QtConcurrent::run(m_view, &ccDialog::renderMap);
+            QtConcurrent::run(m_view, &ccMapWidget::renderMap);
         break;
 
     default:

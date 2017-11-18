@@ -5,13 +5,13 @@
 
 #include "common.h"
 #include "ccDataManager.h"
-#include "ccDialog.h"
+#include "ccMapWidget.h"
 
 class ccController : public QObject
 {
     Q_OBJECT
 public:
-    explicit ccController(ccDataManager &model, ccDialog &view, QObject *parent = 0);
+    explicit ccController(ccDataManager *model, ccMapWidget *view, QObject *parent = 0);
     QStringList getEventParameter(QString params);
 
 signals:
@@ -21,7 +21,7 @@ public slots:
 
 private:
     ccDataManager *m_model;
-    ccDialog *m_view;
+    ccMapWidget *m_view;
 
 };
 

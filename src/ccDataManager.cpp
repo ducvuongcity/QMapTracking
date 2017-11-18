@@ -89,7 +89,7 @@ void ccDataManager::analysisWorldFile(QString &path)
         sendEvent(CC_EVT_MODEL_READWORLDFILE_RESPONSE, QString::number(isValidWorldFile() && (lineCount == 6) ? 1 : 0));
     }
     else {
-        MACRO_DLOG << "Can't open file " << path;
+        MACRO_THR_DLOG << "Can't open file " << path;
     }
 }
 
