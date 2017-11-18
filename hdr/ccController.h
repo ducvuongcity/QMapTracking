@@ -12,12 +12,12 @@ class ccController : public QObject
     Q_OBJECT
 public:
     explicit ccController(ccDataManager &model, ccDialog &view, QObject *parent = 0);
-    QStringList getEventParameter(QString eventWithParam, QString &eventName);
+    QStringList getEventParameter(QString params);
 
 signals:
 
 public slots:
-    void sltEvenHandle(QString event);
+    void sltEvenHandle(EventList event, QString params);
 
 private:
     ccDataManager *m_model;

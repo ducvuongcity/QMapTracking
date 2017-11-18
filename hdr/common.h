@@ -44,7 +44,7 @@ typedef struct {
     double F;
 } ccWorldFile;
 
-enum CommonEnum{
+enum EventList{
     CC_EVT_HMI_READMMS_REQUEST = 0x1000,
     CC_EVT_HMI_READWORLDFILE_REQUEST,
 
@@ -53,13 +53,5 @@ enum CommonEnum{
     CC_EVT_MODEL_UPDATEPROGRESS_RESPONSE,
 };
 
-const QHash <CommonEnum, QString> eventMap = {
-    {CC_EVT_HMI_READMMS_REQUEST,                "evt_HMI_ReadMMS_Req"},
-    {CC_EVT_HMI_READWORLDFILE_REQUEST,          "evt_HMI_ReadWorldFile_Req"},
-
-    {CC_EVT_MODEL_READMMS_RESPONSE,             "evt_Model_ReadMMS_Res"},
-    {CC_EVT_MODEL_READWORLDFILE_RESPONSE,         "evt_Model_ReadWorldFile_Res"},
-    {CC_EVT_MODEL_UPDATEPROGRESS_RESPONSE,      "evt_Model_UpdateProgress_Res"}
-};
 #endif // COMMON
 

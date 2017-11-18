@@ -85,7 +85,7 @@ void ccDialog::sltLoadCoordinates()
     if (!path.isEmpty())
     {
         txtPath->setText(path);
-        sendEvent(QString("evt_HMI_ReadMMS_Req(%1)").arg(path));
+        sendEvent(CC_EVT_HMI_READMMS_REQUEST, path);
     }
 }
 
@@ -98,7 +98,7 @@ void ccDialog::sltLoadMap()
         if (findFileTfw(tfwFile)) {
             imgMap->load(mPathCurrentMap);
             lblMap->setPixmap(QPixmap::fromImage(*imgMap));
-            sendEvent(QString("evt_HMI_ReadWorldFile_Req(%1)").arg(tfwFile));
+            sendEvent(CC_EVT_HMI_READWORLDFILE_REQUEST, tfwFile);
         }
         else
             QMessageBox::critical(this, "Can't load map", "Can't load map because TFW file not found!");
@@ -152,10 +152,10 @@ QPointF ccDialog::convertPixelToMMS(const QPoint &pixel)
                   worldFile.D*pixel.x() + worldFile.E*pixel.y() + worldFile.F);
 }
 
-void ccDialog::sendEvent(QString event)
+void ccDialog::sendEvent(EventList event, QString params)
 {
     MACRO_THR_DLOG << "Send event " << event;
-    emit sgnEvent(event);
+    emit sgnEvent(event, params);
 }
 // ADD-START QMapTracking 2017.11.18 dhthong
 void ccDialog::sltSet2DImageInfo()

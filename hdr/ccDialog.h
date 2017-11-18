@@ -60,7 +60,7 @@ public:
     bool findFileTfw(QString &tfwFile);
     bool renderMap();
     QPointF convertPixelToMMS(const QPoint &pixel);
-    void sendEvent(QString event);
+    void sendEvent(EventList event, QString params);
 
 private slots:
     void sltLoadCoordinates();
@@ -71,7 +71,7 @@ private slots:
     void sltSet2DImageInfo();
 // ADD-END QMapTracking 2017,11.18 dhthong
 signals:
-    void sgnEvent(QString event);
+    void sgnEvent(EventList event, QString params);
 
 };
 

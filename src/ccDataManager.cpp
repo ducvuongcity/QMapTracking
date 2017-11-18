@@ -42,7 +42,7 @@ void ccDataManager::analysisMMS(QString &path)
             list = line.split(rx, QString::SkipEmptyParts);
             if (list.size() != 4) {
                 MACRO_THR_DLOG << "MMS File incorrect";
-                sendEvent(QString("evt_Model_ReadMMS_Res(%1)").arg(0));
+                sendEvent(CC_EVT_MODEL_READMMS_RESPONSE ,QString::number(0));
                 return;
             }
             tempPoint.x = list.at(0).toDouble();
@@ -52,7 +52,7 @@ void ccDataManager::analysisMMS(QString &path)
             mListMMS.append(tempPoint);
         }
         txtFile.close();
-        sendEvent(QString("evt_Model_ReadMMS_Res(%1)").arg(1));
+        sendEvent(CC_EVT_MODEL_READMMS_RESPONSE ,QString::number(1));
     }
 }
 
@@ -86,7 +86,7 @@ void ccDataManager::analysisWorldFile(QString &path)
             ++lineCount;
         }
         txtFile.close();
-        sendEvent(QString("evt_Model_ReadWorldFile_Res(%1)").arg(isValidWorldFile() && (lineCount == 6) ? 1 : 0));
+        sendEvent(CC_EVT_MODEL_READWORLDFILE_RESPONSE, QString::number(isValidWorldFile() && (lineCount == 6) ? 1 : 0));
     }
     else {
         MACRO_DLOG << "Can't open file " << path;
@@ -103,9 +103,9 @@ void ccDataManager::resetWorldFile()
     mWorldFile.F = 0;
 }
 
-void ccDataManager::sendEvent(QString event)
+void ccDataManager::sendEvent(EventList event, QString params)
 {
-    emit sgnEvent(event);
+    emit sgnEvent(event, params);
 }
 
 QList<ccPoint4D> &ccDataManager::getListMMS()

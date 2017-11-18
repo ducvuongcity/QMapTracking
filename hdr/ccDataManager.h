@@ -17,15 +17,12 @@ private:
     ccDataBuilerImage2DInfo *m_pDBImage2DInfo;
 // ADD-END QMapTracking 2017,11.18 dhthong
 
-public:
     QList<ccPoint4D> mListMMS;
     QList<QPoint> mListPixel;
     ccWorldFile mWorldFile;
 
-    void analysisMMS(QString &path);
-    void analysisWorldFile(QString &path);
     void resetWorldFile();
-    void sendEvent(QString event);
+    void sendEvent(EventList event, QString params);
 
 public:
     explicit ccDataManager(QObject *parent = 0);
@@ -35,6 +32,9 @@ public:
     QList<QPoint> &getListPixel();
     void setListPixel(const QList<QPoint> &list);
     bool isValidWorldFile();
+    void analysisMMS(QString &path);
+    void analysisWorldFile(QString &path);
+
 // ADD-START QMapTracking 2017.11.18 dhthong
     bool notifyChange2DImageInfo(QString &path);
     bool requestFindImagePathByTime(double time, QString &strResult);
@@ -44,7 +44,7 @@ signals:
     void sgnResponseReadStart();
     void udateProgressBarValue(int value);
 
-    void sgnEvent(QString event);
+    void sgnEvent(EventList event, QString params);
 
 public slots:
 
