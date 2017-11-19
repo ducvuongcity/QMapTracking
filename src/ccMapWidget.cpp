@@ -165,15 +165,7 @@ void ccMapWidget::sltSet2DImageInfo()
                                                      );
     if (!path.isEmpty())
     {
-
-        if( nullptr != m_model )
-        {
-            m_model->notifyChange2DImageInfo(path);
-        }
-        else
-        {
-//            QMessageBox::critical(this, "abc");
-        }
+        sendEvent(CC_EVT_HMI_READ_2D_IMAGE_INFO, path);
     }
 }
 
@@ -225,7 +217,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     {
         quint32 start = StartEndPoint.at(idx << 1);
         quint32 end = StartEndPoint.at((idx << 1) + 1);
-        for(int i = start; i < end; i++)
+        for(unsigned int i = start; i < end; i++)
         {
             imgMap->setPixel(ListPixel.at(i).x(), ListPixel.at(i).y(), COLOR_GREEN);
         }
@@ -239,14 +231,15 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
         quint32 start = StartEndPoint.at(idx << 1);
         quint32 end = StartEndPoint.at((idx << 1) + 1);
         quint32 step = (end - start) / CC_SELECT_REGION_DIVIDE;
-        while(start <= end)
+        QString imageDir;
+        while(start < end)
         {
-            QString imageDir;
             m_model->requestFindImagePathByTime(m_model->getListMMS().at(start).t, imageDir);
             imageDirectoryList.append(imageDir);
-
             start += step;
         }
+        m_model->requestFindImagePathByTime(m_model->getListMMS().at(end).t, imageDir);
+        imageDirectoryList.append(imageDir);
     }
     //
     return;
@@ -254,20 +247,33 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
 
 bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint)
 {
-    bool isNotLeftFirstPoint, isNotLeftSecondPoint;
-    bool isNotBelowFirstPoint, isNotBelowSecondPoint;
+    bool isRightFirstPoint, isRightSecondPoint;
+    bool isAboveFirstPoint, isAboveSecondPoint;
 
-    isNotLeftFirstPoint = (mmsPoint.x() > firstPoint.x())?true:false;
-    isNotLeftSecondPoint = (mmsPoint.x() > secondPoint.x())?true:false;
+    int BotLeftX = (firstPoint.x() > secondPoint.x()) ? firstPoint.x() : secondPoint.x();
+    int BotLeftY = (firstPoint.y() > secondPoint.y()) ? firstPoint.y() : secondPoint.y();
 
-    isNotBelowFirstPoint = (mmsPoint.y() > firstPoint.y())?true:false;
-    isNotBelowSecondPoint = (mmsPoint.y() > secondPoint.y())?true:false;
+    isRightFirstPoint = (mmsPoint.x() > firstPoint.x())?true:false;
+    isRightSecondPoint = (mmsPoint.x() > secondPoint.x())?true:false;
 
-    if( (isNotLeftFirstPoint ^ isNotLeftSecondPoint) &&
-        (isNotBelowFirstPoint ^ isNotBelowSecondPoint) )
+    isAboveFirstPoint = (mmsPoint.y() > firstPoint.y())?true:false;
+    isAboveSecondPoint = (mmsPoint.y() > secondPoint.y())?true:false;
+
+    if( (isRightFirstPoint ^ isRightSecondPoint) &&
+        (isAboveFirstPoint ^ isAboveSecondPoint) )
     {
         return true;
     }
+
+    if((mmsPoint.x() == BotLeftX) && (isAboveFirstPoint ^ isAboveSecondPoint))
+    {
+        return true;
+    }
+    if((mmsPoint.y() == BotLeftY) && (isRightFirstPoint ^ isRightSecondPoint))
+    {
+        return true;
+    }
+
     return false;
 }
 // ADD-END QMapTracking 2017.11.18 dhthong
