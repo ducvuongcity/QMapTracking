@@ -4,38 +4,18 @@
 ccDataBuilerImage2DInfo::ccDataBuilerImage2DInfo()
 {
     m_Images.clear();
-    m_pRows = NULL;
 }
 ccDataBuilerImage2DInfo::~ccDataBuilerImage2DInfo()
 {
-    if(NULL != m_pRows)
-    {
-        // dht-TODO: memory leak
-        delete m_pRows;
-        m_pRows = NULL;
-    }
 }
 
 bool ccDataBuilerImage2DInfo::InitialRowInfo()
 {
-    // clean m_pRows
-    if(NULL != m_pRows)
+    // clean m_Rows
+    for(int i = 0; i < CC_FILE_IMAGE_COLUM; i++)
     {
-        for(int i = 0; i < CC_FILE_IMAGE_COLUM; i++)
-        {
-            m_pRows[i].clear();
-        }
+        m_Rows[i].clear();
     }
-    else
-    {
-        m_pRows = new QStringList[CC_FILE_IMAGE_COLUM - 1];
-        if (NULL == m_pRows)
-        {
-            // debug log
-            return false;
-        }
-    }
-    return true;
 }
 
 bool ccDataBuilerImage2DInfo::setRootPath(QString &rootPath)
@@ -98,7 +78,7 @@ void ccDataBuilerImage2DInfo::addImageInfo(QStringList &strListInfo)
     for( ; i < (CC_FILE_IMAGE_COLUM - 1); i++)
     {
         QString FolderName(strListInfo.at(i));
-        QStringList *pRow = &(m_pRows[i]);
+        QStringList *pRow = &(m_Rows[i]);
         int j = 0;
         for( ; j < pRow->size(); j++)
         {
@@ -138,7 +118,7 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
     resultPath.append(m_strRootPath);
     for(int i = 0; i < (CC_FILE_IMAGE_COLUM - 1); i++)
     {
-        QStringList *pRow = &(m_pRows[i]);
+        QStringList *pRow = &(m_Rows[i]);
         resultPath.append(QDir::separator());
         resultPath.append(pRow->at(targetImageInfo.arDirecInfo[i]));
     }

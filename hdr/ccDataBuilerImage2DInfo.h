@@ -23,7 +23,7 @@ class ccDataBuilerImage2DInfo
 {
 private:
     QVector<image2DInfo> m_Images;
-    QStringList *m_pRows;
+    QStringList m_Rows[CC_FILE_IMAGE_COLUM];
     QString m_strRootPath;
     bool set2DImageFile(QString &);
 private:

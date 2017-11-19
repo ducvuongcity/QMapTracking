@@ -232,7 +232,24 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     }
     lblMap->setPixmap(QPixmap::fromImage(*imgMap));
     // 3: show 2Dimage
+    // find direc and store in imageDirectoryList
+    QStringList imageDirectoryList;
+    for(idx = 0; idx < pathNum; idx++)
+    {
+        quint32 start = StartEndPoint.at(idx << 1);
+        quint32 end = StartEndPoint.at((idx << 1) + 1);
+        quint32 step = (end - start) / CC_SELECT_REGION_DIVIDE;
+        while(start <= end)
+        {
+            QString imageDir;
+            m_model->requestFindImagePathByTime(m_model->getListMMS().at(start).t, imageDir);
+            imageDirectoryList.append(imageDir);
 
+            start += step;
+        }
+    }
+    //
+    return;
 }
 
 bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint)

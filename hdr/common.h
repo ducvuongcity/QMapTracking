@@ -29,7 +29,7 @@
 #define COLOR_LINE          COLOR_RED
 
 #define CC_SELECT_SIZE      100
-
+#define CC_SELECT_REGION_DIVIDE     5
 typedef struct {
     double x;
     double y;
