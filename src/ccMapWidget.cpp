@@ -22,7 +22,7 @@ void ccMapWidget::createScreen()
     btnLoadCoordinates->setText("Load Txt");
     btnLoadMap = new QPushButton(this);
     btnLoadMap->setText("Load Map");
-    lblMap = new QMapContainer(this);
+
     btnPlayPause = new QPushButton(this);
     btnPlayPause->setText("Play");
     btnPlayPause->setEnabled(false);
@@ -30,13 +30,15 @@ void ccMapWidget::createScreen()
     btnLoad2DInfo = new QPushButton(this);
     btnLoad2DInfo->setText("Image 2D");
 // ADD-END QMapTracking 2017,11.18 dhthong
+
+    lblMap = new QMapContainer(this);
+//    sceneMap = new ccImageView(this);
+//    lblMap->setScene(sceneMap);
     scrMap = new QScrollArea(this);
     scrMap->setWidgetResizable(true);
     scrMap->setWidget(lblMap);
 
-    lblImage = new QGraphicsView(this);
-    sceneImage = new ccImageView(this);
-    lblImage->setScene(sceneImage);
+    lblImage = new QLabel(this);
     scrImage = new QScrollArea(this);
     scrImage->setWidgetResizable(true);
     scrImage->setWidget(lblImage);
@@ -61,11 +63,12 @@ void ccMapWidget::signalMapping()
 {
     QObject::connect(btnLoadCoordinates, SIGNAL(clicked(bool)), this, SLOT(sltLoadCoordinates()), Qt::UniqueConnection);
     QObject::connect(btnLoadMap, SIGNAL(clicked(bool)), this, SLOT(sltLoadMap()), Qt::UniqueConnection);
-    QObject::connect(lblMap, SIGNAL(sgnMousePressEvent(QPoint,QPoint)), this, SLOT(sltMapMouseReceiver(QPoint,QPoint)));
+//    QObject::connect(lblMap, SIGNAL(sgnMousePressEvent(QPoint,QPoint)), this, SLOT(sltMapMouseReceiver(QPoint,QPoint)));
     QObject::connect(btnPlayPause, SIGNAL(clicked(bool)), this, SLOT(sltPlayPause()));
 // ADD-START QMapTracking 2017.11.18 dhthong
     QObject::connect(btnLoad2DInfo, SIGNAL(clicked(bool)), this, SLOT(sltSet2DImageInfo()));
 // ADD-END QMapTracking 2017,11.18 dhthong
+    QObject::connect(this, SIGNAL(sgnDrawMMSItem(QGraphicsPolygonItem*)), lblMap, SLOT(drawMMSHandle(QGraphicsPolygonItem*)));
 }
 
 bool ccMapWidget::findFileTfw(QString &tfwFile)
@@ -96,7 +99,7 @@ void ccMapWidget::sltLoadMap()
         QString tfwFile;
         if (findFileTfw(tfwFile)) {
             imgMap->load(mPathCurrentMap);
-            lblMap->setPixmap(QPixmap::fromImage(*imgMap));
+            lblMap->scene()->addPixmap(QPixmap::fromImage(*imgMap));
             sendEvent(CC_EVT_HMI_READWORLDFILE_REQUEST, tfwFile);
         }
         else
@@ -117,6 +120,7 @@ void ccMapWidget::sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &l
 
 bool ccMapWidget::renderMap()
 {
+    QPolygon polygonLine;
     MACRO_THR_DLOG << m_model->isValidWorldFile() << m_model->getListMMS().size() << !imgMap->isNull();
     if(m_model->isValidWorldFile() && m_model->getListMMS().size() > 0 && !imgMap->isNull()) {
         MACRO_THR_DLOG << "Render start!";
@@ -135,10 +139,13 @@ bool ccMapWidget::renderMap()
 
             imgMap->setPixel(x, y, COLOR_LINE);
             listPixel.append(QPoint(x, y));
+            polygonLine << QPoint(x, y);
         }
         MACRO_THR_DLOG << "Render done!";
         m_model->setListPixel(listPixel);
-        lblMap->setPixmap(QPixmap::fromImage(*imgMap));
+        QGraphicsPolygonItem *polygonItem = new QGraphicsPolygonItem(polygonLine);
+        polygonItem->setPen(QPen(Qt::red, 5));
+        emit sgnDrawMMSItem(polygonItem);
         return true;
     }
     return false;

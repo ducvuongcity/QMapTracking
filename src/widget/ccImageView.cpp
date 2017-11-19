@@ -1,9 +1,9 @@
 #include "ccImageView.h"
+#include "common.h"
 
 
 ccImageView::ccImageView(QObject* parent): QGraphicsScene(parent)
 {
-    itemToDraw = 0;
     rectItemDraw = 0;
 }
 
@@ -26,10 +26,9 @@ void ccImageView::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
 
 void ccImageView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
 
-    removeItem(itemToDraw);
     removeItem(rectItemDraw);
-    itemToDraw = 0;
     rectItemDraw = 0;
+    this->addLine(100, 100, 200, 200, QPen(Qt::blue, 5));
     QGraphicsScene::mouseReleaseEvent(event);
 }
 

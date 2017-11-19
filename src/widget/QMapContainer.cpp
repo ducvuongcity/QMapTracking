@@ -1,12 +1,15 @@
 #include "QMapContainer.h"
 
 
-QMapContainer::QMapContainer(QWidget *parent, Qt::WindowFlags f)
-    : QLabel(parent, f)
-{}
-
-void QMapContainer::mousePressEvent(QMouseEvent *ev)
+QMapContainer::QMapContainer(QWidget *parent)
+    : QGraphicsView(parent)
 {
-//    QToolTip::showText(ev->globalPos(), QString("%1, %2").arg(ev->x()).arg(ev->y()));
-    emit sgnMousePressEvent(ev->globalPos(), ev->pos());
+    sceneMap = new ccImageView(this);
+    setScene(sceneMap);
+}
+
+void QMapContainer::drawMMSHandle(QGraphicsPolygonItem *item)
+{
+    MACRO_THR_DLOG << "drawMMSHandle";
+    sceneMap->addItem(item);
 }

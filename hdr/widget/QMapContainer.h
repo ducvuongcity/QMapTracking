@@ -1,21 +1,28 @@
 #ifndef QMAPCONTAINER_H
 #define QMAPCONTAINER_H
 
-#include <QLabel>
+#include <QGraphicsView>
 #include <QMouseEvent>
 #include <QToolTip>
 #include "common.h"
+#include "ccImageView.h"
 
-class QMapContainer : public QLabel
+class QMapContainer : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    explicit QMapContainer(QWidget* parent = 0, Qt::WindowFlags f = 0);
-    void mousePressEvent(QMouseEvent *ev);
+    explicit QMapContainer(QWidget* parent = 0);
+
 
 signals:
-    void sgnMousePressEvent(const QPoint &globalPoint, const QPoint &localPoint);
+
+
+public slots:
+    void drawMMSHandle(QGraphicsPolygonItem *item);
+
+private:
+    ccImageView *sceneMap = nullptr;
 };
 
 #endif // QMAPCONTAINER_H

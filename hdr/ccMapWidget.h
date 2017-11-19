@@ -45,9 +45,8 @@ private:
     QMapContainer *lblMap = nullptr;
     QScrollArea *scrMap = nullptr;
 
-    QGraphicsView *lblImage = nullptr;
     QScrollArea *scrImage = nullptr;
-    ccImageView *sceneImage;
+    QLabel *lblImage;
 
     QVBoxLayout *verticalLayout = nullptr;
     QHBoxLayout *horizontalLayout = nullptr;
@@ -74,6 +73,7 @@ private slots:
 // ADD-END QMapTracking 2017,11.18 dhthong
 signals:
     void sgnEvent(EventList event, QString params);
+    void sgnDrawMMSItem(QGraphicsPolygonItem *item);
 
 };
 
