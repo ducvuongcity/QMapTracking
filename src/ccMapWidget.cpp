@@ -22,18 +22,14 @@ void ccMapWidget::createScreen()
     btnLoadCoordinates->setText("Load Txt");
     btnLoadMap = new QPushButton(this);
     btnLoadMap->setText("Load Map");
-
+    lblMap = new QMapContainer(this);
     btnPlayPause = new QPushButton(this);
     btnPlayPause->setText("Play");
     btnPlayPause->setEnabled(false);
 // ADD-START QMapTracking 2017.11.18 dhthong
     btnLoad2DInfo = new QPushButton(this);
     btnLoad2DInfo->setText("Image 2D");
-// ADD-END QMapTracking 2017,11.18 dhthong
-
-    lblMap = new QMapContainer(this);
-//    sceneMap = new ccImageView(this);
-//    lblMap->setScene(sceneMap);
+// ADD-END QMapTracking 2017.11.18 dhthong
     scrMap = new QScrollArea(this);
     scrMap->setWidgetResizable(true);
     scrMap->setWidget(lblMap);
@@ -51,7 +47,7 @@ void ccMapWidget::createScreen()
     horizontalLayout->addWidget(btnLoadMap);
 // ADD-START QMapTracking 2017.11.18 dhthong
     horizontalLayout->addWidget(btnLoad2DInfo);
-// ADD-END QMapTracking 2017,11.18 dhthong
+// ADD-END QMapTracking 2017.11.18 dhthong
     horizontalLayout->addWidget(btnPlayPause);
 
     verticalLayout->addLayout(horizontalLayout);
@@ -63,12 +59,12 @@ void ccMapWidget::signalMapping()
 {
     QObject::connect(btnLoadCoordinates, SIGNAL(clicked(bool)), this, SLOT(sltLoadCoordinates()), Qt::UniqueConnection);
     QObject::connect(btnLoadMap, SIGNAL(clicked(bool)), this, SLOT(sltLoadMap()), Qt::UniqueConnection);
-//    QObject::connect(lblMap, SIGNAL(sgnMousePressEvent(QPoint,QPoint)), this, SLOT(sltMapMouseReceiver(QPoint,QPoint)));
+    QObject::connect(lblMap, SIGNAL(sgnMousePressEvent(QPoint,QPoint)), this, SLOT(sltMapMouseReceiver(QPoint,QPoint)));
     QObject::connect(btnPlayPause, SIGNAL(clicked(bool)), this, SLOT(sltPlayPause()));
 // ADD-START QMapTracking 2017.11.18 dhthong
+    QObject::connect(lblMap, SIGNAL(sgnmouseReleaseEvent(const QPoint &, const QPoint &)), this, SLOT(sltMapMouseReleaseEvent(const QPoint &, const QPoint &)));
     QObject::connect(btnLoad2DInfo, SIGNAL(clicked(bool)), this, SLOT(sltSet2DImageInfo()));
-// ADD-END QMapTracking 2017,11.18 dhthong
-    QObject::connect(this, SIGNAL(sgnDrawMMSItem(QGraphicsPolygonItem*)), lblMap, SLOT(drawMMSHandle(QGraphicsPolygonItem*)));
+// ADD-END QMapTracking 2017.11.18 dhthong
 }
 
 bool ccMapWidget::findFileTfw(QString &tfwFile)
@@ -99,7 +95,7 @@ void ccMapWidget::sltLoadMap()
         QString tfwFile;
         if (findFileTfw(tfwFile)) {
             imgMap->load(mPathCurrentMap);
-            lblMap->scene()->addPixmap(QPixmap::fromImage(*imgMap));
+            lblMap->setPixmap(QPixmap::fromImage(*imgMap));
             sendEvent(CC_EVT_HMI_READWORLDFILE_REQUEST, tfwFile);
         }
         else
@@ -120,7 +116,6 @@ void ccMapWidget::sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &l
 
 bool ccMapWidget::renderMap()
 {
-    QPolygon polygonLine;
     MACRO_THR_DLOG << m_model->isValidWorldFile() << m_model->getListMMS().size() << !imgMap->isNull();
     if(m_model->isValidWorldFile() && m_model->getListMMS().size() > 0 && !imgMap->isNull()) {
         MACRO_THR_DLOG << "Render start!";
@@ -139,13 +134,10 @@ bool ccMapWidget::renderMap()
 
             imgMap->setPixel(x, y, COLOR_LINE);
             listPixel.append(QPoint(x, y));
-            polygonLine << QPoint(x, y);
         }
         MACRO_THR_DLOG << "Render done!";
         m_model->setListPixel(listPixel);
-        QGraphicsPolygonItem *polygonItem = new QGraphicsPolygonItem(polygonLine);
-        polygonItem->setPen(QPen(Qt::red, 5));
-        emit sgnDrawMMSItem(polygonItem);
+        lblMap->setPixmap(QPixmap::fromImage(*imgMap));
         return true;
     }
     return false;
@@ -184,4 +176,81 @@ void ccMapWidget::sltSet2DImageInfo()
         }
     }
 }
-// ADD-END QMapTracking 2017,11.18 dhthong
+
+void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint &secondPoint)
+{
+    if(nullptr == imgMap || nullptr == m_model)
+    {
+        return;
+    }
+    // select some mms points and hightlight it
+    // 1: Select
+    QList<QPoint> &ListPixel = m_model->getListPixel();
+    quint32 idx = 0;
+    QVector<quint32> StartEndPoint;
+    quint32 pathNum = 0;
+    bool flag = false;
+    for( ; idx < ListPixel.size(); idx++)
+    {
+        if(determineMMSPointInsideSelectRegion(ListPixel.at(idx), firstPoint, secondPoint))
+        {
+            // stat new path
+            if(!flag)
+            {
+                StartEndPoint.append(idx);
+                flag = true;
+                pathNum++;
+            }
+        }
+        else if(flag)
+        {
+            // end of path
+            StartEndPoint.append(idx);
+            flag = false;
+        }
+    }
+    StartEndPoint.append(idx);
+    if(0 == pathNum)
+    {
+        // debug log: there is no mms point inside select region
+        return;
+    }
+    if( StartEndPoint.size() < (pathNum << 1) )
+    {
+        // debug log: ambigous error
+        return;
+    }
+    // 2: HightLight
+    for(idx = 0; idx < pathNum; idx++)
+    {
+        quint32 start = StartEndPoint.at(idx << 1);
+        quint32 end = StartEndPoint.at((idx << 1) + 1);
+        for(int i = start; i < end; i++)
+        {
+            imgMap->setPixel(ListPixel.at(i).x(), ListPixel.at(i).y(), COLOR_GREEN);
+        }
+    }
+    lblMap->setPixmap(QPixmap::fromImage(*imgMap));
+    // 3: show 2Dimage
+
+}
+
+bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint)
+{
+    bool isNotLeftFirstPoint, isNotLeftSecondPoint;
+    bool isNotBelowFirstPoint, isNotBelowSecondPoint;
+
+    isNotLeftFirstPoint = (mmsPoint.x() > firstPoint.x())?true:false;
+    isNotLeftSecondPoint = (mmsPoint.x() > secondPoint.x())?true:false;
+
+    isNotBelowFirstPoint = (mmsPoint.y() > firstPoint.y())?true:false;
+    isNotBelowSecondPoint = (mmsPoint.y() > secondPoint.y())?true:false;
+
+    if( (isNotLeftFirstPoint ^ isNotLeftSecondPoint) &&
+        (isNotBelowFirstPoint ^ isNotBelowSecondPoint) )
+    {
+        return true;
+    }
+    return false;
+}
+// ADD-END QMapTracking 2017.11.18 dhthong

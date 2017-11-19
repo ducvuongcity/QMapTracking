@@ -143,4 +143,4 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
         resultPath.append(pRow->at(targetImageInfo.arDirecInfo[i]));
     }
 }
-// ADD-END QMapTracking 2017,11.18 dhthong
+// ADD-END QMapTracking 2017.11.18 dhthong

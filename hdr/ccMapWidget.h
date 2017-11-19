@@ -22,7 +22,6 @@
 #include "QMapContainer.h"
 #include "ccDataManager.h"
 #include "common.h"
-#include "ccImageView.h"
 
 #define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData"
 
@@ -41,15 +40,19 @@ private:
     QPushButton *btnPlayPause = nullptr;
 // ADD-START QMapTracking 2017.11.18 dhthong
     QPushButton *btnLoad2DInfo = nullptr;
-// ADD-END QMapTracking 2017,11.18 dhthong
+// ADD-END QMapTracking 2017.11.18 dhthong
     QMapContainer *lblMap = nullptr;
     QScrollArea *scrMap = nullptr;
 
+    QLabel *lblImage = nullptr;
     QScrollArea *scrImage = nullptr;
-    QLabel *lblImage;
 
     QVBoxLayout *verticalLayout = nullptr;
     QHBoxLayout *horizontalLayout = nullptr;
+
+// ADD-START QMapTracking 2017.11.18 dhthong
+    bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
+// ADD-END QMapTracking 2017.11.18 dhthong
 
 public:
     explicit ccMapWidget(ccDataManager *model, QWidget *parent = 0);
@@ -70,10 +73,10 @@ private slots:
     void sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &localPoint);
 // ADD-START QMapTracking 2017.11.18 dhthong
     void sltSet2DImageInfo();
-// ADD-END QMapTracking 2017,11.18 dhthong
+    void sltMapMouseReleaseEvent(const QPoint &, const QPoint &);
+// ADD-END QMapTracking 2017.11.18 dhthong
 signals:
     void sgnEvent(EventList event, QString params);
-    void sgnDrawMMSItem(QGraphicsPolygonItem *item);
 
 };
 

@@ -28,6 +28,8 @@
 #define COLOR_BLACK         qRgb(0, 0, 0)
 #define COLOR_LINE          COLOR_RED
 
+#define CC_SELECT_SIZE      100
+
 typedef struct {
     double x;
     double y;

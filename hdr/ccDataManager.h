@@ -15,7 +15,7 @@ class ccDataManager : public QObject
 // ADD-START QMapTracking 2017.11.18 dhthong
 private:
     ccDataBuilerImage2DInfo *m_pDBImage2DInfo;
-// ADD-END QMapTracking 2017,11.18 dhthong
+// ADD-END QMapTracking 2017.11.18 dhthong
 
     QList<ccPoint4D> mListMMS;
     QList<QPoint> mListPixel;
@@ -38,7 +38,7 @@ public:
 // ADD-START QMapTracking 2017.11.18 dhthong
     bool notifyChange2DImageInfo(QString &path);
     bool requestFindImagePathByTime(double time, QString &strResult);
-// ADD-END QMapTracking 2017,11.18 dhthong
+// ADD-END QMapTracking 2017.11.18 dhthong
 signals:
     void sgnResponseReadFinished(int type, bool state);
     void sgnResponseReadStart();
