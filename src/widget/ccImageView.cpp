@@ -28,7 +28,6 @@ void ccImageView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
 
     removeItem(rectItemDraw);
     rectItemDraw = 0;
-    this->addLine(100, 100, 200, 200, QPen(Qt::blue, 5));
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
