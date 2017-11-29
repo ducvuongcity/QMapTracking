@@ -25,7 +25,7 @@ void ccDataManager::analysisMMS(QString &path)
     ccPoint4D tempPoint;
     QFile txtFile(path);
     QStringList list;
-    QRegExp rx("\\s+");
+    QRegExp rx("(\\s+|\\,)");
     if (txtFile.open(QIODevice::ReadOnly))
     {
         int sizeOfFile = txtFile.size();
