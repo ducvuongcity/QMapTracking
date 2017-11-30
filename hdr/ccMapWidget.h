@@ -15,6 +15,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QScrollBar>
+#include <QSplitter>
 
 #include <QStyle>
 #include <QDesktopWidget>
@@ -49,6 +50,8 @@ private:
 
     QVBoxLayout *verticalLayout = nullptr;
     QHBoxLayout *horizontalLayout = nullptr;
+
+    QSplitter *spliter = nullptr;
 
 // ADD-START QMapTracking 2017.11.18 dhthong
     bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);

@@ -42,6 +42,10 @@ void ccMapWidget::createScreen()
     horizontalLayout = new QHBoxLayout();
     verticalLayout = new QVBoxLayout(this);
 
+    spliter = new QSplitter(Qt::Vertical);
+    spliter->addWidget(scrMap);
+    spliter->addWidget(scrImage);
+
     horizontalLayout->addWidget(txtPath);
     horizontalLayout->addWidget(btnLoadCoordinates);
     horizontalLayout->addWidget(btnLoadMap);
@@ -51,8 +55,7 @@ void ccMapWidget::createScreen()
     horizontalLayout->addWidget(btnPlayPause);
 
     verticalLayout->addLayout(horizontalLayout);
-    verticalLayout->addWidget(scrMap);
-    verticalLayout->addWidget(scrImage);
+    verticalLayout->addWidget(spliter);
 }
 
 void ccMapWidget::signalMapping()
@@ -129,8 +132,10 @@ bool ccMapWidget::renderMap()
             int x = (int)(worldFile.E*xMap - worldFile.B*yMap + worldFile.B*worldFile.F - worldFile.E*worldFile.C)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
             int y = (int)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
 
-            if(x >= imgMap->width() || y >= imgMap->height())
+            if(x < 0 || x >= imgMap->width() || y < 0 || y >= imgMap->height()) {
+                MACRO_THR_DLOG << "Pixel out map";
                 break;
+            }
 
             imgMap->setPixel(x, y, COLOR_LINE);
             listPixel.append(QPoint(x, y));

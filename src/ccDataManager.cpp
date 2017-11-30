@@ -9,13 +9,7 @@ ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
 
 ccDataManager::~ccDataManager()
 {
-// ADD-START QMapTracking 2017.11.18 dhthong
-    if(nullptr != m_pDBImage2DInfo)
-    {
-        delete m_pDBImage2DInfo;
-        m_pDBImage2DInfo = nullptr;
-    }
-// ADD-END QMapTracking 2017.11.18 dhthong
+    MACRO_DEL_PTR(m_pDBImage2DInfo);
 }
 
 void ccDataManager::analysisMMS(QString &path)
