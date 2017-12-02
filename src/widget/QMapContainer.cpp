@@ -43,8 +43,9 @@ void QMapContainer::mouseMoveEvent(QMouseEvent *ev)
         double aspec = CC_SELECT_SIZE / qSqrt(size);
         int newXAxis = (int)(aspec * width) + m_firstPoint.x();
         int newYAxis = (int)(aspec * height) + m_firstPoint.y();
-        QPoint newPoint(newXAxis, newYAxis);
-        m_pRubberBand->setGeometry(QRect(m_firstPoint, newPoint).normalized());
+        m_secondPoint.setX(newXAxis);
+        m_secondPoint.setY(newYAxis);
+        m_pRubberBand->setGeometry(QRect(m_firstPoint, m_secondPoint).normalized());
     }
     else
     {
@@ -57,7 +58,7 @@ void QMapContainer::mouseReleaseEvent(QMouseEvent *ev)
     if(nullptr != m_pRubberBand)
     {
         m_pRubberBand->hide();
-        emit sgnmouseReleaseEvent(m_firstPoint, ev->pos());
+        emit sgnmouseReleaseEvent(m_firstPoint, m_secondPoint);
         delete m_pRubberBand;
         m_pRubberBand = nullptr;
     }

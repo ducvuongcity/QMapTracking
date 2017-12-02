@@ -15,6 +15,7 @@ class QMapContainer : public QLabel
 private:
     QRubberBand *m_pRubberBand;
     QPoint m_firstPoint;
+    QPoint m_secondPoint;
 private:
     void createRubberBand(QMouseEvent *ev);
 // ADD-END QMapTracking 2017.11.18 dhthong

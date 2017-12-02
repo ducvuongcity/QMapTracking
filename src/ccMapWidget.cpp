@@ -182,9 +182,11 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     QVector<quint32> StartEndPoint;
     quint32 pathNum = 0;
     bool flag = false;
+    QRect rect;
+    CreateArea(firstPoint, secondPoint, rect);
     for( ; idx < ListPixel.size(); idx++)
     {
-        if(determineMMSPointInsideSelectRegion(ListPixel.at(idx), firstPoint, secondPoint))
+        if(rect.contains(ListPixel.at((idx))))
         {
             // stat new path
             if(!flag)
@@ -245,35 +247,33 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     return;
 }
 
-bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint)
+bool ccMapWidget::CreateArea(const QPoint &firstPoint, const QPoint &secondPoint, QRect rect)
 {
-    bool isRightFirstPoint, isRightSecondPoint;
-    bool isAboveFirstPoint, isAboveSecondPoint;
+    QPoint BotLeft, TopRight;
 
-    int BotLeftX = (firstPoint.x() > secondPoint.x()) ? firstPoint.x() : secondPoint.x();
-    int BotLeftY = (firstPoint.y() > secondPoint.y()) ? firstPoint.y() : secondPoint.y();
-
-    isRightFirstPoint = (mmsPoint.x() > firstPoint.x())?true:false;
-    isRightSecondPoint = (mmsPoint.x() > secondPoint.x())?true:false;
-
-    isAboveFirstPoint = (mmsPoint.y() > firstPoint.y())?true:false;
-    isAboveSecondPoint = (mmsPoint.y() > secondPoint.y())?true:false;
-
-    if( (isRightFirstPoint ^ isRightSecondPoint) &&
-        (isAboveFirstPoint ^ isAboveSecondPoint) )
+    if(firstPoint.x() > secondPoint.x())
     {
-        return true;
+        BotLeft.setX(secondPoint.x());
+        TopRight.setX(firstPoint.x());
+    }
+    else
+    {
+        TopRight.setX(secondPoint.x());
+        BotLeft.setX(firstPoint.x());
     }
 
-    if((mmsPoint.x() == BotLeftX) && (isAboveFirstPoint ^ isAboveSecondPoint))
+    if(firstPoint.y() > secondPoint.y())
     {
-        return true;
+        BotLeft.setY(secondPoint.y());
+        TopRight.setY(firstPoint.y());
     }
-    if((mmsPoint.y() == BotLeftY) && (isRightFirstPoint ^ isRightSecondPoint))
+    else
     {
-        return true;
+        TopRight.setY(secondPoint.y());
+        BotLeft.setY(firstPoint.y());
     }
 
-    return false;
+    rect.setBottomLeft(BotLeft);
+    rect.setTopRight(TopRight);
 }
 // ADD-END QMapTracking 2017.11.18 dhthong

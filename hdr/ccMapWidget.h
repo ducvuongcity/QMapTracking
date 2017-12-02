@@ -51,7 +51,7 @@ private:
     QHBoxLayout *horizontalLayout = nullptr;
 
 // ADD-START QMapTracking 2017.11.18 dhthong
-    bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
+    bool CreateArea(const QPoint &firstPoint, const QPoint &secondPoint, QRect rect);
 // ADD-END QMapTracking 2017.11.18 dhthong
 
 public:
