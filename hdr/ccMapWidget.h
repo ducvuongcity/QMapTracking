@@ -54,7 +54,7 @@ private:
     QSplitter *spliter = nullptr;
 
 // ADD-START QMapTracking 2017.11.18 dhthong
-    bool CreateArea(const QPoint &firstPoint, const QPoint &secondPoint, QRect rect);
+    bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
 // ADD-END QMapTracking 2017.11.18 dhthong
 
 public:
