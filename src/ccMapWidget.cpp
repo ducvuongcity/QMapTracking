@@ -5,6 +5,7 @@ ccMapWidget::ccMapWidget(ccDataManager *model, QWidget *parent)
     , m_model(model)
 {
     MACRO_THR_DLOG << "GUI Thread";
+    showImgThread = new QThread(parent);
     createScreen();
     signalMapping();
 }
@@ -126,11 +127,11 @@ bool ccMapWidget::renderMap()
         ccWorldFile worldFile = m_model->getWorldFile();
         QList<QPoint> listPixel;
 
-        for(int i = 0; i < m_model->getListMMS().size(); ++i) {
+        for(uint32_t i = 0; i < m_model->getListMMS().size(); ++i) {
             double xMap = m_model->getListMMS().at(i).x;
             double yMap = m_model->getListMMS().at(i).y;
-            int x = (int)(worldFile.E*xMap - worldFile.B*yMap + worldFile.B*worldFile.F - worldFile.E*worldFile.C)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
-            int y = (int)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
+            int32_t x = (int32_t)(worldFile.E*xMap - worldFile.B*yMap + worldFile.B*worldFile.F - worldFile.E*worldFile.C)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
+            int32_t y = (int32_t)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
 
             if(x < 0 || x >= imgMap->width() || y < 0 || y >= imgMap->height()) {
                 MACRO_THR_DLOG << "Pixel out map";
@@ -183,9 +184,9 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     // select some mms points and hightlight it
     // 1: Select
     QList<QPoint> &ListPixel = m_model->getListPixel();
-    quint32 idx = 0;
-    QVector<quint32> StartEndPoint;
-    quint32 pathNum = 0;
+    uint32_t idx = 0;
+    QVector<uint32_t> StartEndPoint;
+    uint32_t pathNum = 0;
     bool flag = false;
     for( ; idx < ListPixel.size(); idx++)
     {
@@ -220,9 +221,9 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     // 2: HightLight
     for(idx = 0; idx < pathNum; idx++)
     {
-        quint32 start = StartEndPoint.at(idx << 1);
-        quint32 end = StartEndPoint.at((idx << 1) + 1);
-        for(unsigned int i = start; i < end; i++)
+        uint32_t start = StartEndPoint.at(idx << 1);
+        uint32_t end = StartEndPoint.at((idx << 1) + 1);
+        for(uint8_t i = start; i < end; i++)
         {
             imgMap->setPixel(ListPixel.at(i).x(), ListPixel.at(i).y(), COLOR_GREEN);
         }
@@ -233,9 +234,9 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     QStringList imageDirectoryList;
     for(idx = 0; idx < pathNum; idx++)
     {
-        quint32 start = StartEndPoint.at(idx << 1);
-        quint32 end = StartEndPoint.at((idx << 1) + 1);
-        quint32 step = (end - start) / CC_SELECT_REGION_DIVIDE;
+        uint32_t start = StartEndPoint.at(idx << 1);
+        uint32_t end = StartEndPoint.at((idx << 1) + 1);
+        uint32_t step = (end - start) / CC_SELECT_REGION_DIVIDE;
         QString imageDir;
         while(start < end)
         {
@@ -246,8 +247,6 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
         m_model->requestFindImagePathByTime(m_model->getListMMS().at(end).t, imageDir);
         imageDirectoryList.append(imageDir);
     }
-    //
-    return;
 }
 
 bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint)
@@ -258,27 +257,14 @@ bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, co
     int BotLeftX = (firstPoint.x() > secondPoint.x()) ? firstPoint.x() : secondPoint.x();
     int BotLeftY = (firstPoint.y() > secondPoint.y()) ? firstPoint.y() : secondPoint.y();
 
-    isRightFirstPoint = (mmsPoint.x() > firstPoint.x())?true:false;
-    isRightSecondPoint = (mmsPoint.x() > secondPoint.x())?true:false;
+    isRightFirstPoint = (mmsPoint.x() > firstPoint.x());
+    isRightSecondPoint = (mmsPoint.x() > secondPoint.x());
 
-    isAboveFirstPoint = (mmsPoint.y() > firstPoint.y())?true:false;
-    isAboveSecondPoint = (mmsPoint.y() > secondPoint.y())?true:false;
+    isAboveFirstPoint = (mmsPoint.y() > firstPoint.y());
+    isAboveSecondPoint = (mmsPoint.y() > secondPoint.y());
 
-    if( (isRightFirstPoint ^ isRightSecondPoint) &&
-        (isAboveFirstPoint ^ isAboveSecondPoint) )
-    {
-        return true;
-    }
-
-    if((mmsPoint.x() == BotLeftX) && (isAboveFirstPoint ^ isAboveSecondPoint))
-    {
-        return true;
-    }
-    if((mmsPoint.y() == BotLeftY) && (isRightFirstPoint ^ isRightSecondPoint))
-    {
-        return true;
-    }
-
-    return false;
+    return ((isRightFirstPoint ^ isRightSecondPoint) && (isAboveFirstPoint ^ isAboveSecondPoint))
+            || ((mmsPoint.x() == BotLeftX) && (isAboveFirstPoint ^ isAboveSecondPoint))
+            || ((mmsPoint.y() == BotLeftY) && (isRightFirstPoint ^ isRightSecondPoint));
 }
 // ADD-END QMapTracking 2017.11.18 dhthong

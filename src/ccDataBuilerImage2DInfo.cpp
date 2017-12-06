@@ -12,7 +12,7 @@ ccDataBuilerImage2DInfo::~ccDataBuilerImage2DInfo()
 bool ccDataBuilerImage2DInfo::InitialRowInfo()
 {
     // clean m_Rows
-    for(int i = 0; i < CC_FILE_IMAGE_COLUM; i++)
+    for(uint8_t i = 0; i < CC_FILE_IMAGE_COLUM; i++)
     {
         m_Rows[i].clear();
     }
@@ -74,12 +74,12 @@ bool ccDataBuilerImage2DInfo::set2DImageFile(QString &str2DfilePath)
 void ccDataBuilerImage2DInfo::addImageInfo(QStringList &strListInfo)
 {
     image2DInfo NewElement;
-    int i = 0;
+    uint32_t i = 0;
     for( ; i < (CC_FILE_IMAGE_COLUM - 1); i++)
     {
         QString FolderName(strListInfo.at(i));
         QStringList *pRow = &(m_Rows[i]);
-        int j = 0;
+        uint32_t j = 0;
         for( ; j < pRow->size(); j++)
         {
             QString value(pRow->at(j));
@@ -101,7 +101,7 @@ void ccDataBuilerImage2DInfo::addImageInfo(QStringList &strListInfo)
 void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath)
 {
     resultPath.clear();                     // output empty string if can not find a corresponding path
-    int idx = 0;
+    uint32_t idx = 0;
     for( ; idx < m_Images.size(); idx++)
     {
         if(gpsTime == m_Images.at(idx).dbTime)
@@ -116,7 +116,7 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
     }
     image2DInfo targetImageInfo = m_Images.at(idx);
     resultPath.append(m_strRootPath);
-    for(int i = 0; i < (CC_FILE_IMAGE_COLUM - 1); i++)
+    for(uint32_t i = 0; i < (CC_FILE_IMAGE_COLUM - 1); i++)
     {
         QStringList *pRow = &(m_Rows[i]);
         resultPath.append(QDir::separator());

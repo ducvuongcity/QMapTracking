@@ -53,6 +53,8 @@ private:
 
     QSplitter *spliter = nullptr;
 
+    QThread *showImgThread = nullptr;
+
 // ADD-START QMapTracking 2017.11.18 dhthong
     bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
 // ADD-END QMapTracking 2017.11.18 dhthong

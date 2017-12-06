@@ -22,9 +22,9 @@ void ccDataManager::analysisMMS(QString &path)
     QRegExp rx("(\\s+|\\,)");
     if (txtFile.open(QIODevice::ReadOnly))
     {
-        int sizeOfFile = txtFile.size();
+        uint32_t sizeOfFile = txtFile.size();
         MACRO_THR_DLOG << "Size of file " << sizeOfFile;
-        int countSize = 0;
+        uint32_t countSize = 0;
         QTextStream in(&txtFile);
         emit sgnResponseReadStart();
         while (!in.atEnd())
@@ -120,7 +120,7 @@ QList<QPoint> &ccDataManager::getListPixel()
 void ccDataManager::setListPixel(const QList<QPoint> &list)
 {
     mListPixel.clear();
-    for (int i = 0; i < list.size(); ++i)
+    for (uint32_t i = 0; i < list.size(); ++i)
         mListPixel.append(list.at(i));
 }
 
