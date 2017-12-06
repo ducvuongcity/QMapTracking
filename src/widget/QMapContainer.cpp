@@ -38,6 +38,10 @@ void QMapContainer::mouseMoveEvent(QMouseEvent *ev)
     int32_t width = currentPoint.x() - m_firstPoint.x();
     int32_t height = currentPoint.y() - m_firstPoint.y();
     uint64_t size = width * width + height * height;
+	if(0 == size)
+	{
+		return;
+	}
     if( (CC_SELECT_SIZE * CC_SELECT_SIZE) < size )
     {
         double aspec = CC_SELECT_SIZE / qSqrt(size);
@@ -49,6 +53,7 @@ void QMapContainer::mouseMoveEvent(QMouseEvent *ev)
     }
     else
     {
+		m_secondPoint = ev->pos();
         m_pRubberBand->setGeometry(QRect(m_firstPoint, ev->pos()).normalized());
     }
 }
