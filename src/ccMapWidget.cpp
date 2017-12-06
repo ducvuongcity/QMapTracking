@@ -223,7 +223,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     {
         uint32_t start = StartEndPoint.at(idx << 1);
         uint32_t end = StartEndPoint.at((idx << 1) + 1);
-        for(uint8_t i = start; i < end; i++)
+        for(uint32_t i = start; i < end; i++)
         {
             imgMap->setPixel(ListPixel.at(i).x(), ListPixel.at(i).y(), COLOR_GREEN);
         }
