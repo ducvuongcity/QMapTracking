@@ -11,11 +11,9 @@ void QMapContainer::mousePressEvent(QMouseEvent *ev)
 {
 //    QToolTip::showText(ev->globalPos(), QString("%1, %2").arg(ev->x()).arg(ev->y()));
     emit sgnMousePressEvent(ev->globalPos(), ev->pos());
-// ADD-START QMapTracking 2017.11.18 dhthong
     createRubberBand(ev);
-// ADD-END QMapTracking 2017.11.18 dhthong
 }
-// ADD-START QMapTracking 2017.11.18 dhthong
+
 void QMapContainer::createRubberBand(QMouseEvent *ev)
 {
     m_firstPoint = ev->pos();
@@ -73,4 +71,3 @@ QMapContainer::~QMapContainer()
 {
     MACRO_DEL_PTR(m_pRubberBand);
 }
-// ADD-END QMapTracking 2017.11.18 dhthong
