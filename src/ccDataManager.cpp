@@ -2,9 +2,7 @@
 
 ccDataManager::ccDataManager(QObject *parent) : QObject(parent) {
     resetWorldFile();
-// ADD-START QMapTracking 2017.11.18 dhthong
     m_pDBImage2DInfo = new ccDataBuilerImage2DInfo();
-// ADD-END QMapTracking 2017.11.18 dhthong
 }
 
 ccDataManager::~ccDataManager()
@@ -129,7 +127,6 @@ bool ccDataManager::isValidWorldFile()
     return (mWorldFile.A != 0.0f) && (mWorldFile.E != 0.0f);
 }
 
-// ADD-START QMapTracking 2017.11.18 dhthong
 bool ccDataManager::notifyChange2DImageInfo(QString &path)
 {
     bool bRet = false;
@@ -153,4 +150,3 @@ bool ccDataManager::requestFindImagePathByTime(double time, QString &strResult)
     }
     return bRet;
 }
-// ADD-END QMapTracking 2017.11.18 dhthong

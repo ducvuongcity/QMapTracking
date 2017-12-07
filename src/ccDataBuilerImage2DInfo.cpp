@@ -1,6 +1,5 @@
 #include "ccDataBuilerImage2DInfo.h"
 
-// ADD-START QMapTracking 2017.11.18 dhthong
 ccDataBuilerImage2DInfo::ccDataBuilerImage2DInfo()
 {
     m_Images.clear();
@@ -123,4 +122,3 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
         resultPath.append(pRow->at(targetImageInfo.arDirecInfo[i]));
     }
 }
-// ADD-END QMapTracking 2017.11.18 dhthong

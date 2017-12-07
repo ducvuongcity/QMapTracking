@@ -29,14 +29,12 @@ void ccController::sltEvenHandle(EventList event, QString params)
         if(paramList[0].toInt())
             QtConcurrent::run(m_view, &ccMapWidget::renderMap);
         break;
-// ADD-START QMapTracking 2017.11.18 dhthong
     case CC_EVT_HMI_READ_2D_IMAGE_INFO:
         if(!params.isEmpty())
         {
             QtConcurrent::run(m_model, m_model->notifyChange2DImageInfo, params);
         }
         break;
-// ADD-END QMapTracking 2017.11.18 dhthong
     default:
         break;
     }

@@ -27,10 +27,8 @@ void ccMapWidget::createScreen()
     btnPlayPause = new QPushButton(this);
     btnPlayPause->setText("Play");
     btnPlayPause->setEnabled(false);
-// ADD-START QMapTracking 2017.11.18 dhthong
     btnLoad2DInfo = new QPushButton(this);
     btnLoad2DInfo->setText("Image 2D");
-// ADD-END QMapTracking 2017.11.18 dhthong
     scrMap = new QScrollArea(this);
     scrMap->setWidgetResizable(true);
     scrMap->setWidget(lblMap);
@@ -50,27 +48,25 @@ void ccMapWidget::createScreen()
     horizontalLayout->addWidget(txtPath);
     horizontalLayout->addWidget(btnLoadCoordinates);
     horizontalLayout->addWidget(btnLoadMap);
-// ADD-START QMapTracking 2017.11.18 dhthong
     horizontalLayout->addWidget(btnLoad2DInfo);
-// ADD-END QMapTracking 2017.11.18 dhthong
     horizontalLayout->addWidget(btnPlayPause);
 
     verticalLayout->addLayout(horizontalLayout);
     verticalLayout->addWidget(spliter);
 }
 
+//mapping signal slot
 void ccMapWidget::signalMapping()
 {
     QObject::connect(btnLoadCoordinates, SIGNAL(clicked(bool)), this, SLOT(sltLoadCoordinates()), Qt::UniqueConnection);
     QObject::connect(btnLoadMap, SIGNAL(clicked(bool)), this, SLOT(sltLoadMap()), Qt::UniqueConnection);
     QObject::connect(lblMap, SIGNAL(sgnMousePressEvent(QPoint,QPoint)), this, SLOT(sltMapMouseReceiver(QPoint,QPoint)));
     QObject::connect(btnPlayPause, SIGNAL(clicked(bool)), this, SLOT(sltPlayPause()));
-// ADD-START QMapTracking 2017.11.18 dhthong
     QObject::connect(lblMap, SIGNAL(sgnmouseReleaseEvent(const QPoint &, const QPoint &)), this, SLOT(sltMapMouseReleaseEvent(const QPoint &, const QPoint &)));
     QObject::connect(btnLoad2DInfo, SIGNAL(clicked(bool)), this, SLOT(sltSet2DImageInfo()));
-// ADD-END QMapTracking 2017.11.18 dhthong
 }
 
+//find world file
 bool ccMapWidget::findFileTfw(QString &tfwFile)
 {
     QFileInfo mapfile(mPathCurrentMap);
@@ -81,6 +77,7 @@ bool ccMapWidget::findFileTfw(QString &tfwFile)
     return false;
 }
 
+//load gps file
 void ccMapWidget::sltLoadCoordinates()
 {
     QString path = QFileDialog::getOpenFileName(this, "Open TXT File", QString::fromStdString(DEFAULD_PATH), "Text File(*.txt)");
@@ -91,6 +88,7 @@ void ccMapWidget::sltLoadCoordinates()
     }
 }
 
+//load map tif
 void ccMapWidget::sltLoadMap()
 {
     mPathCurrentMap = QFileDialog::getOpenFileName(this, "Open Map File", QString::fromStdString(DEFAULD_PATH), "Image File(*.tif)");
@@ -112,12 +110,14 @@ void ccMapWidget::sltPlayPause()
 
 }
 
+//rev & show mouse position
 void ccMapWidget::sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &localPoint)
 {
     if(m_model->getListPixel().contains(localPoint))
         QToolTip::showText(globalPoint, QString("%1, %2").arg(convertPixelToMMS(localPoint).x()).arg(convertPixelToMMS(localPoint).y()));
 }
 
+//render path
 bool ccMapWidget::renderMap()
 {
     MACRO_THR_DLOG << m_model->isValidWorldFile() << m_model->getListMMS().size() << !imgMap->isNull();
@@ -156,12 +156,13 @@ QPointF ccMapWidget::convertPixelToMMS(const QPoint &pixel)
                   worldFile.D*pixel.x() + worldFile.E*pixel.y() + worldFile.F);
 }
 
+//send event to controller
 void ccMapWidget::sendEvent(EventList event, QString params)
 {
     MACRO_THR_DLOG << "Send event " << event;
     emit sgnEvent(event, params);
 }
-// ADD-START QMapTracking 2017.11.18 dhthong
+
 void ccMapWidget::sltSet2DImageInfo()
 {
     QString path = QFileDialog::getExistingDirectory(this,
@@ -267,4 +268,3 @@ bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, co
             || ((mmsPoint.x() == BotLeftX) && (isAboveFirstPoint ^ isAboveSecondPoint))
             || ((mmsPoint.y() == BotLeftY) && (isRightFirstPoint ^ isRightSecondPoint));
 }
-// ADD-END QMapTracking 2017.11.18 dhthong
