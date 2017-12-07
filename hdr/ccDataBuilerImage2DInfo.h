@@ -1,7 +1,6 @@
 #ifndef CCDATABUILERIMAGE2DINFO_H
 #define CCDATABUILERIMAGE2DINFO_H
 
-// ADD-START QMapTracking 2017.11.18 dhthong
 #include <QVector>
 #include <QFile>
 #include <QStringList>
@@ -25,18 +24,15 @@ private:
     QVector<image2DInfo> m_Images;
     QStringList m_Rows[CC_FILE_IMAGE_COLUM];
     QString m_strRootPath;
+
     bool set2DImageFile(QString &);
-private:
     void addImageInfo(QStringList &);
     bool InitialRowInfo();
+
 public:
     ccDataBuilerImage2DInfo();
-
     virtual ~ccDataBuilerImage2DInfo();
-
     bool setRootPath(QString &);
-
     void findPathByTime(double, QString &);
 };
-// ADD-END QMapTracking 2017.11.18 dhthong
 #endif // CCDATABUILERIMAGE2DINFO_H
