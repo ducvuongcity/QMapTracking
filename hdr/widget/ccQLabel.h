@@ -1,5 +1,5 @@
-#ifndef QMAPCONTAINER_H
-#define QMAPCONTAINER_H
+#ifndef CCQLABEL_H
+#define CCQLABEL_H
 
 #include <QLabel>
 #include <QMouseEvent>
@@ -8,11 +8,12 @@
 #include <QtMath>
 #include "common.h"
 
-class QMapContainer : public QLabel
+class ccQLabel : public QLabel
 {
     Q_OBJECT
 
 private:
+    bool m_usingRubberBand = false;
     QRubberBand *m_pRubberBand;
     QPoint m_firstPoint;
     QPoint m_secondPoint;
@@ -20,15 +21,15 @@ private:
     void createRubberBand(QMouseEvent *ev);
 
 public:
-    explicit QMapContainer(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit ccQLabel(QWidget* parent = 0, Qt::WindowFlags f = 0, bool rubberBand = false);
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
-    virtual ~QMapContainer();
+    virtual ~ccQLabel();
 
 signals:
     void sgnMousePressEvent(const QPoint &globalPoint, const QPoint &localPoint);
     void sgnmouseReleaseEvent(const QPoint &firstPoint, const QPoint &secondPoint);
 };
 
-#endif // QMAPCONTAINER_H
+#endif // CCQLABEL_H

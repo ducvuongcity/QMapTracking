@@ -20,11 +20,13 @@
 #include <QStyle>
 #include <QDesktopWidget>
 
-#include "QMapContainer.h"
+#include <QTimer>
+
+#include "ccQLabel.h"
 #include "ccDataManager.h"
 #include "common.h"
 
-#define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData"
+#define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData/20171014"
 
 class ccMapWidget : public QWidget
 {
@@ -34,21 +36,24 @@ private:
     ccDataManager *m_model = nullptr;
     QString mPathCurrentMap;
     QImage *imgMap = nullptr;
+    QImage *imgImage = nullptr;
     QLineEdit *txtPath = nullptr;
     QPushButton *btnLoadCoordinates = nullptr;
     QPushButton *btnLoadMap = nullptr;
     QPushButton *btnPlayPause = nullptr;
     QPushButton *btnLoad2DInfo = nullptr;
-    QMapContainer *lblMap = nullptr;
+    ccQLabel *lblMap = nullptr;
     QScrollArea *scrMap = nullptr;
-    QLabel *lblImage = nullptr;
-    QScrollArea *scrImage = nullptr;
+    ccQLabel *lblImage = nullptr;
     QVBoxLayout *verticalLayout = nullptr;
     QHBoxLayout *horizontalLayout = nullptr;
     QSplitter *spliter = nullptr;
-    QThread *showImgThread = nullptr;
+    QTimer *timerShowImage = nullptr;
 
     bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
+    void showImage(const QString &path);
+
+    bool m_isPlay;
 
 public:
     explicit ccMapWidget(ccDataManager *model, QWidget *parent = 0);
@@ -56,7 +61,7 @@ public:
 
     void createScreen();
     void signalMapping();
-    bool findFileTfw(QString &tfwFile);
+    bool findWorldFile(QString &tfwFile);
     bool renderMap();
     QPointF convertPixelToMMS(const QPoint &pixel);
     void sendEvent(EventList event, QString params);
@@ -68,6 +73,8 @@ private slots:
     void sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &localPoint);
     void sltSet2DImageInfo();
     void sltMapMouseReleaseEvent(const QPoint &, const QPoint &);
+    void sltResizeImageView(int pos, int index);
+    void sltShowImage();
 
 signals:
     void sgnEvent(EventList event, QString params);

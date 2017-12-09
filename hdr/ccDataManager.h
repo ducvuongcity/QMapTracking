@@ -16,6 +16,7 @@ private:
     ccDataBuilerImage2DInfo *m_pDBImage2DInfo;
     QList<ccPoint4D> mListMMS;
     QList<QPoint> mListPixel;
+    QStringList mListPathImage;
     ccWorldFile mWorldFile;
 
     void resetWorldFile();
@@ -27,7 +28,9 @@ public:
     QList<ccPoint4D> &getListMMS();
     ccWorldFile &getWorldFile();
     QList<QPoint> &getListPixel();
+    QStringList &getListPathImage();
     void setListPixel(const QList<QPoint> &list);
+    void setListPathImage(const QStringList &list);
     bool isValidWorldFile();
     void analysisMMS(QString &path);
     void analysisWorldFile(QString &path);

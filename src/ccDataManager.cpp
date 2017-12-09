@@ -115,11 +115,26 @@ QList<QPoint> &ccDataManager::getListPixel()
     return mListPixel;
 }
 
+QStringList &ccDataManager::getListPathImage()
+{
+    return mListPathImage;
+}
+
 void ccDataManager::setListPixel(const QList<QPoint> &list)
 {
-    mListPixel.clear();
+    if (mListPixel.size() > 0)
+        mListPixel.clear();
     for (uint32_t i = 0; i < list.size(); ++i)
         mListPixel.append(list.at(i));
+}
+
+void ccDataManager::setListPathImage(const QStringList &list)
+{
+    if (mListPathImage.size() > 0)
+        mListPathImage.clear();
+    for (uint32_t i = 0; i < list.size(); ++i) {
+        mListPathImage.append(list.at(i));
+    }
 }
 
 bool ccDataManager::isValidWorldFile()
