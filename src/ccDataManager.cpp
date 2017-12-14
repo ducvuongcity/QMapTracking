@@ -144,6 +144,7 @@ bool ccDataManager::isValidWorldFile()
 
 bool ccDataManager::notifyChange2DImageInfo(QString &path)
 {
+    MACRO_THR_DLOG << path;
     bool bRet = false;
     if(nullptr != m_pDBImage2DInfo)
     {
@@ -151,7 +152,7 @@ bool ccDataManager::notifyChange2DImageInfo(QString &path)
     }
     else
     {
-        // debug log
+        MACRO_THR_DLOG << "m_pDBImage2DInfo is null";
     }
     return bRet;
 }
@@ -161,7 +162,8 @@ bool ccDataManager::requestFindImagePathByTime(double time, QString &strResult)
     bool bRet = false;
     if(nullptr != m_pDBImage2DInfo)
     {
-        m_pDBImage2DInfo->findPathByTime(time, strResult);
+        // before searching, round down time. eg: 12345.xxx -> 12345
+        m_pDBImage2DInfo->findPathByTime(floor(time), strResult);
     }
     return bRet;
 }

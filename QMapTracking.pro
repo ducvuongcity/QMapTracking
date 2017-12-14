@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     src/ccController.cpp \
     src/widget/ccQLabel.cpp \
     src/ccDataBuilerImage2DInfo.cpp \
-    src/ccDialog.cpp
+    src/ccDialog.cpp \
+    ccThreadShowImage.cpp
 
 HEADERS += \
     hdr/ccMapWidget.h \
@@ -22,7 +23,8 @@ HEADERS += \
     hdr/common.h \
     hdr/widget/ccQLabel.h \
     hdr/ccDataBuilerImage2DInfo.h \
-    hdr/ccDialog.h
+    hdr/ccDialog.h \
+    ccThreadShowImage.h
 
 INCLUDEPATH += hdr \
     hdr/widget \

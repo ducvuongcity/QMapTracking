@@ -199,6 +199,7 @@ void ccMapWidget::sltSet2DImageInfo()
                                                      QString::fromStdString(DEFAULD_PATH),
                                                      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
                                                      );
+    path = QDir::toNativeSeparators(path);
     if (!path.isEmpty())
     {
         sendEvent(CC_EVT_HMI_READ_2D_IMAGE_INFO, path);
@@ -261,7 +262,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     }
     lblMap->setPixmap(QPixmap::fromImage(*imgMap));
     // 3: show 2Dimage
-    // find direc and store in imageDirectoryList
+    // find all selected image directs and store in imageDirectoryList
     QStringList imageDirectoryList;
     for(idx = 0; idx < pathNum; idx++)
     {
@@ -278,7 +279,10 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
         if(end < m_model->getListMMS().size())
             m_model->requestFindImagePathByTime(m_model->getListMMS().at(end).t, imageDir);
         MACRO_THR_DLOG << "Finded image: " << imageDir;
-        imageDirectoryList.append(imageDir);
+        if(!imageDir.isEmpty())
+        {
+            imageDirectoryList.append(imageDir);
+        }
     }
     if (imageDirectoryList.size() > 0) {
         m_model->setListPathImage(imageDirectoryList);

@@ -115,6 +115,8 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
     }
     image2DInfo targetImageInfo = m_Images.at(idx);
     resultPath.append(m_strRootPath);
+    resultPath.append(QDir::separator());
+    resultPath.append(CC_FILE_IMAGE_FOLDER_NAME);
     for(uint32_t i = 0; i < (CC_FILE_IMAGE_COLUM - 1); i++)
     {
         QStringList *pRow = &(m_Rows[i]);
