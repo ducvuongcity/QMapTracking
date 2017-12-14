@@ -31,7 +31,9 @@
 #define CC_SELECT_SIZE          100
 #define CC_SELECT_REGION_DIVIDE 5
 
-#define CC_TIMER_SHOW_IMAGE     1000
+#define CC_TIMER_SHOW_IMAGE     500
+
+#define CC_TIM
 
 typedef struct {
     double x;

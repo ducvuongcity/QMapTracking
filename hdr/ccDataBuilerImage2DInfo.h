@@ -7,6 +7,8 @@
 #include <QTextStream>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
+#include "common.h"
 
 #define CC_FILE_IMAGE_COLUM                 6           /// number of colums in file 2D.txt
 #define CC_FILE_IMAGE_FOLDER_NAME           "IMAGE"

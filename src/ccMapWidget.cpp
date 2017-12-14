@@ -43,6 +43,7 @@ void ccMapWidget::createScreen()
 
     lblImage->setAlignment(Qt::AlignCenter);
     lblImage->setStyleSheet("border: 1px solid gray");
+    lblImage->setText("No image");
 
     horizontalLayout = new QHBoxLayout();
     verticalLayout = new QVBoxLayout(this);
@@ -264,6 +265,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     // 3: show 2Dimage
     // find all selected image directs and store in imageDirectoryList
     QStringList imageDirectoryList;
+    MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
     for(idx = 0; idx < pathNum; idx++)
     {
         uint32_t start = StartEndPoint.at(idx << 1);
@@ -273,18 +275,23 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
         while(start < end)
         {
             m_model->requestFindImagePathByTime(m_model->getListMMS().at(start).t, imageDir);
-            imageDirectoryList.append(imageDir);
+            if(!imageDir.isEmpty())
+            {
+                imageDirectoryList.append(imageDir);
+                MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
+            }
             start += step;
         }
         if(end < m_model->getListMMS().size())
             m_model->requestFindImagePathByTime(m_model->getListMMS().at(end).t, imageDir);
-        MACRO_THR_DLOG << "Finded image: " << imageDir;
         if(!imageDir.isEmpty())
         {
             imageDirectoryList.append(imageDir);
+            MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
         }
     }
     if (imageDirectoryList.size() > 0) {
+        MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
         m_model->setListPathImage(imageDirectoryList);
         btnPlayPause->setEnabled(true);
     }
