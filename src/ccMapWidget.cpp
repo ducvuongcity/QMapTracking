@@ -120,24 +120,13 @@ void ccMapWidget::sltLoadMap()
 
 void ccMapWidget::sltPlayPause()
 {
-    MACRO_THR_DLOG << (m_isPlay ? "Play" : "Pause") << "Clicked";
-
-    if (timerShowImage) {
-        if(!m_isPlay) {
-            if (!timerShowImage->isActive()) {
-                timerShowImage->start();
-                MACRO_THR_DLOG << "Timer started";
-            }
-        }
-        else {
-            if (timerShowImage->isActive()) {
-                timerShowImage->stop();
-                MACRO_THR_DLOG << "Timer stoped";
-            }
-        }
-        m_isPlay = !m_isPlay;
-        btnPlayPause->setText(m_isPlay ? "Pause" : "Play");
-    }
+//    for(int i = 0; i < imageDirectoryList.size(); i++)
+//    {
+//        QPixmap image(imageDirectoryList.at(0));
+//        image = image.scaledToWidth(lblImage->width());
+//        lblImage->setPixmap(image);
+//        QThread::msleep(CC_TIMER_SHOW_IMAGE);
+//    }
 }
 
 //rev & show mouse position
@@ -244,6 +233,9 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     if(0 == pathNum)
     {
         // debug log: there is no mms point inside select region
+        MACRO_THR_DLOG << "pathNum = 0";
+        btnPlayPause->setEnabled(false);
+        lblImage->setText("No image");
         return;
     }
     if( StartEndPoint.size() < (pathNum << 1) )
@@ -264,7 +256,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     lblMap->setPixmap(QPixmap::fromImage(*imgMap));
     // 3: show 2Dimage
     // find all selected image directs and store in imageDirectoryList
-    QStringList imageDirectoryList;
+    imageDirectoryList.clear();
     MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
     for(idx = 0; idx < pathNum; idx++)
     {
@@ -292,8 +284,17 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     }
     if (imageDirectoryList.size() > 0) {
         MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
-        m_model->setListPathImage(imageDirectoryList);
+//        m_model->setListPathImage(imageDirectoryList);
         btnPlayPause->setEnabled(true);
+        QPixmap image(imageDirectoryList.at(0));
+        image = image.scaledToWidth(lblImage->width());
+        lblImage->setPixmap(image);
+    }
+    else
+    {
+        MACRO_THR_DLOG << "List path image size = 0";
+        btnPlayPause->setEnabled(false);
+        lblImage->setText("No image");
     }
 }
 

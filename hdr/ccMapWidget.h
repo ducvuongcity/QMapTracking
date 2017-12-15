@@ -21,10 +21,12 @@
 #include <QDesktopWidget>
 
 #include <QTimer>
+#include <QThread>
 
 #include "ccQLabel.h"
 #include "ccDataManager.h"
 #include "common.h"
+#include "ccThreadShowImage.h"
 
 #define DEFAULD_PATH "../QMapTracking/document/qPlugin/SampleData/20171014"
 
@@ -54,6 +56,8 @@ private:
     void showImage(const QString &path);
 
     bool m_isPlay;
+
+    QStringList imageDirectoryList;
 
 public:
     explicit ccMapWidget(ccDataManager *model, QWidget *parent = 0);
