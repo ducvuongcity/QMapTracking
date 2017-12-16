@@ -12,7 +12,7 @@ ccDataManager::~ccDataManager()
 
 void ccDataManager::analysisMMS(QString &path)
 {
-    //MACRO_THR_DLOG << "Read MMS";
+    MACRO_THR_DLOG << "Read MMS";
     mListMMS.clear();
     ccPoint4D tempPoint;
     QFile txtFile(path);
@@ -21,7 +21,7 @@ void ccDataManager::analysisMMS(QString &path)
     if (txtFile.open(QIODevice::ReadOnly))
     {
         uint32_t sizeOfFile = txtFile.size();
-        //MACRO_THR_DLOG << "Size of file " << sizeOfFile;
+        MACRO_THR_DLOG << "Size of file " << sizeOfFile;
         uint32_t countSize = 0;
         QTextStream in(&txtFile);
         emit sgnResponseReadStart();
@@ -29,11 +29,11 @@ void ccDataManager::analysisMMS(QString &path)
         {
             QString line = in.readLine();
             countSize += line.size();
-//            //MACRO_THR_DLOG << "Size count " << countSize;
+//            MACRO_THR_DLOG << "Size count " << countSize;
 //            sendEvent(QString("evt_Model_UpdateProgress_Res(%1)").arg(100*countSize/sizeOfFile));
             list = line.split(rx, QString::SkipEmptyParts);
             if (list.size() != 4) {
-                //MACRO_THR_DLOG << "MMS File incorrect";
+                MACRO_THR_DLOG << "MMS File incorrect";
                 sendEvent(CC_EVT_MODEL_READMMS_RESPONSE ,QString::number(0));
                 return;
             }
@@ -50,7 +50,7 @@ void ccDataManager::analysisMMS(QString &path)
 
 void ccDataManager::analysisWorldFile(QString &path)
 {
-    //MACRO_THR_DLOG << "Read World File";
+    MACRO_THR_DLOG << "Read World File";
     resetWorldFile();
     QFile txtFile(path);;
     if (txtFile.open(QIODevice::ReadOnly))
@@ -81,7 +81,7 @@ void ccDataManager::analysisWorldFile(QString &path)
         sendEvent(CC_EVT_MODEL_READWORLDFILE_RESPONSE, QString::number(isValidWorldFile() && (lineCount == 6) ? 1 : 0));
     }
     else {
-        //MACRO_THR_DLOG << "Can't open file " << path;
+        MACRO_THR_DLOG << "Can't open file " << path;
     }
 }
 
@@ -144,7 +144,7 @@ bool ccDataManager::isValidWorldFile()
 
 bool ccDataManager::notifyChange2DImageInfo(QString &path)
 {
-    //MACRO_THR_DLOG << path;
+    MACRO_THR_DLOG << path;
     bool bRet = false;
     if(nullptr != m_pDBImage2DInfo)
     {
@@ -152,7 +152,7 @@ bool ccDataManager::notifyChange2DImageInfo(QString &path)
     }
     else
     {
-        //MACRO_THR_DLOG << "m_pDBImage2DInfo is null";
+        MACRO_THR_DLOG << "m_pDBImage2DInfo is null";
     }
     return bRet;
 }

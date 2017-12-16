@@ -13,7 +13,7 @@ void ccController::sltEvenHandle(EventList event, QString params)
 {
     QStringList paramList = getEventParameter(params);
 
-//    //MACRO_THR_DLOG << "Receive event " << eventName;
+//    MACRO_THR_DLOG << "Receive event " << eventName;
 
     switch (event) {
     case CC_EVT_HMI_READMMS_REQUEST:

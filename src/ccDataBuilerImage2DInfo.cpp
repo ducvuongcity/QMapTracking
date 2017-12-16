@@ -110,7 +110,7 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
     }
     if(idx == m_Images.size())
     {
-        //MACRO_THR_DLOG << "Error: not image match with time "<< gpsTime;
+        MACRO_THR_DLOG << "Error: no image match with time "<< gpsTime;
         return;
     }
     image2DInfo targetImageInfo = m_Images.at(idx);
@@ -127,7 +127,7 @@ void ccDataBuilerImage2DInfo::findPathByTime(double gpsTime, QString &resultPath
     {
         resultPath.clear();
     }
-    //MACRO_THR_DLOG << "path from 2D.txt:" << resultPath;
-    //MACRO_THR_DLOG << "exist: " << QFileInfo(resultPath).exists();
-    //MACRO_THR_DLOG << "is File: " << QFileInfo(resultPath).isFile();
+    MACRO_THR_DLOG << "path from 2D.txt:" << resultPath;
+    MACRO_THR_DLOG << "exist: " << QFileInfo(resultPath).exists();
+    MACRO_THR_DLOG << "is File: " << QFileInfo(resultPath).isFile();
 }
