@@ -4,7 +4,7 @@ ccMapWidget::ccMapWidget(ccDataManager *model, QWidget *parent)
     : QWidget(parent)
     , m_model(model)
 {
-    MACRO_THR_DLOG << "GUI Thread";
+    //MACRO_THR_DLOG << "GUI Thread";
     m_isPlay = false;
     createScreen();
     signalMapping();
@@ -120,20 +120,7 @@ void ccMapWidget::sltLoadMap()
 
 void ccMapWidget::sltPlayPause()
 {
-    if(m_isPlay)
-    {
-        // stop
-        MACRO_THR_DLOG << "stop thread";
-        threadShowImage.setStop();
-        m_isPlay = !m_isPlay;
-    }
-    else
-    {
-        // start
-        MACRO_THR_DLOG << "start thread";
-        m_isPlay = !m_isPlay;
-        threadShowImage.start();
-    }
+    threadShowImage.PlayPause();
 }
 
 //rev & show mouse position
@@ -146,9 +133,9 @@ void ccMapWidget::sltMapMouseReceiver(const QPoint &globalPoint, const QPoint &l
 //render path
 bool ccMapWidget::renderMap()
 {
-    MACRO_THR_DLOG << m_model->isValidWorldFile() << m_model->getListMMS().size() << !imgMap->isNull();
+    //MACRO_THR_DLOG << m_model->isValidWorldFile() << m_model->getListMMS().size() << !imgMap->isNull();
     if(m_model->isValidWorldFile() && m_model->getListMMS().size() > 0 && !imgMap->isNull()) {
-        MACRO_THR_DLOG << "Render start!";
+        //MACRO_THR_DLOG << "Render start!";
 
         ccWorldFile worldFile = m_model->getWorldFile();
         QList<QPoint> listPixel;
@@ -160,14 +147,14 @@ bool ccMapWidget::renderMap()
             int32_t y = (int32_t)(-worldFile.D*xMap + worldFile.A*yMap + worldFile.D*worldFile.C - worldFile.A*worldFile.F)/(worldFile.A*worldFile.E - worldFile.D*worldFile.B);
 
             if(x < 0 || x >= imgMap->width() || y < 0 || y >= imgMap->height()) {
-                MACRO_THR_DLOG << "Pixel out map";
+                //MACRO_THR_DLOG << "Pixel out map";
                 break;
             }
 
             imgMap->setPixel(x, y, COLOR_LINE);
             listPixel.append(QPoint(x, y));
         }
-        MACRO_THR_DLOG << "Render done!";
+        //MACRO_THR_DLOG << "Render done!";
         m_model->setListPixel(listPixel);
         lblMap->setPixmap(QPixmap::fromImage(*imgMap));
         // clear prev hightlight
@@ -187,7 +174,7 @@ QPointF ccMapWidget::convertPixelToMMS(const QPoint &pixel)
 //send event to controller
 void ccMapWidget::sendEvent(EventList event, QString params)
 {
-    MACRO_THR_DLOG << "Send event " << event;
+    //MACRO_THR_DLOG << "Send event " << event;
     emit sgnEvent(event, params);
 }
 
@@ -215,7 +202,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     QList<QPoint> &ListPixel = m_model->getListPixel();
     if(!m_hightLightPoint.isEmpty() && NULL != imgMap)
     {
-        MACRO_THR_DLOG << "remove hightlight";
+        //MACRO_THR_DLOG << "remove hightlight";
         for(int i = 0; i < m_hightLightPoint.size(); i++)
         {
             imgMap->setPixel(ListPixel.at(i).x(), ListPixel.at(i).y(), COLOR_RED);
@@ -226,11 +213,14 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     // 1: Select
     uint32_t idx = 0;
     QVector<uint32_t> StartEndPoint;
+    QRect rect;
+    CreateRect(firstPoint, secondPoint, rect);
     uint32_t pathNum = 0;
     bool flag = false;
     for( ; idx < ListPixel.size(); idx++)
     {
-        if(determineMMSPointInsideSelectRegion(ListPixel.at(idx), firstPoint, secondPoint))
+//        if(determineMMSPointInsideSelectRegion(ListPixel.at(idx), firstPoint, secondPoint))
+        if(rect.contains(ListPixel.at(idx)))
         {
             // stat new path
             if(!flag)
@@ -251,7 +241,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     if(0 == pathNum)
     {
         // debug log: there is no mms point inside select region
-        MACRO_THR_DLOG << "pathNum = 0";
+        //MACRO_THR_DLOG << "pathNum = 0";
         btnPlayPause->setEnabled(false);
         lblImage->setText("No image");
         return;
@@ -276,7 +266,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     // 3: show 2Dimage
     // find all selected image directs and store in imageDirectoryList
     QStringList imageDirectoryList;
-    MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
+    //MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
     for(idx = 0; idx < pathNum; idx++)
     {
         uint32_t start = StartEndPoint.at(idx << 1);
@@ -289,7 +279,7 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
             if(!imageDir.isEmpty())
             {
                 imageDirectoryList.append(imageDir);
-                MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
+                //MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
             }
             start += step;
         }
@@ -298,24 +288,24 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
         if(!imageDir.isEmpty())
         {
             imageDirectoryList.append(imageDir);
-            MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
+            //MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
         }
     }
     if (imageDirectoryList.size() > 0) {
-        MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
+        //MACRO_THR_DLOG << "List path image size: " << imageDirectoryList.size();
         btnPlayPause->setEnabled(true);
         QPixmap image(imageDirectoryList.at(0));
         image = image.scaledToWidth(lblImage->width());
         lblImage->setPixmap(image);
-        MACRO_THR_DLOG << "isPlay False";
+        //MACRO_THR_DLOG << "isPlay False";
         m_isPlay = false;
-        MACRO_THR_DLOG << "Set image to thread";
+        //MACRO_THR_DLOG << "Set image to thread";
         threadShowImage.setImageList(imageDirectoryList, lblImage);
         // TODO: tooltip: number of images
     }
     else
     {
-        MACRO_THR_DLOG << "List path image size = 0";
+        //MACRO_THR_DLOG << "List path image size = 0";
         btnPlayPause->setEnabled(false);
         lblImage->setText("No image");
     }
@@ -347,4 +337,17 @@ bool ccMapWidget::determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, co
     return ((isRightFirstPoint ^ isRightSecondPoint) && (isAboveFirstPoint ^ isAboveSecondPoint))
             || ((mmsPoint.x() == BotLeftX) && (isAboveFirstPoint ^ isAboveSecondPoint))
             || ((mmsPoint.y() == BotLeftY) && (isRightFirstPoint ^ isRightSecondPoint));
+}
+
+void ccMapWidget::CreateRect(const QPoint &firstPoint, const QPoint &secondPoint, QRect &ret)
+{
+    QPoint botLeft, topRight;
+    botLeft.setX(firstPoint.x()  < secondPoint.x() ? firstPoint.x() : secondPoint.x());
+    botLeft.setY(firstPoint.y()  < secondPoint.y() ? firstPoint.y() : secondPoint.y());
+    topRight.setX(firstPoint.x() > secondPoint.x() ? firstPoint.x() : secondPoint.x());
+    topRight.setY(firstPoint.y() > secondPoint.y() ? firstPoint.y() : secondPoint.y());
+    //MACRO_THR_DLOG << "botLeft: " << botLeft.x() << " " << botLeft.y();
+    //MACRO_THR_DLOG << "topRight: " << topRight.x() << " " << topRight.y();
+    ret.setBottomLeft(botLeft);
+    ret.setTopRight(topRight);
 }

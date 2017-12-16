@@ -19,6 +19,7 @@ protected:
 public:
     ccThreadShowImage();
     void setStop();
+    void PlayPause();
     void setImageList(QStringList imageDirectoryList, QLabel *lbl);
 };
 

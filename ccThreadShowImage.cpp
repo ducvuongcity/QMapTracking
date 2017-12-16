@@ -5,23 +5,37 @@ void ccThreadShowImage::setStop()
     m_isStop = true;
 }
 
+void ccThreadShowImage::PlayPause()
+{
+    if(m_isStop)
+    {
+        //MACRO_THR_DLOG << "Show image";
+        m_isStop = false;
+        start();
+    }
+    else
+    {
+        //MACRO_THR_DLOG << "Stop show image";
+        m_isStop = true;
+    }
+}
+
 void ccThreadShowImage::showImage()
 {
     if(m_imageDirectoryList.isEmpty() || NULL == m_plblImageScreen)
     {
-        MACRO_THR_DLOG << "List empty or Label null";
+        //MACRO_THR_DLOG << "List empty or Label null";
         return;
     }
-    m_isStop = false;
-    MACRO_THR_DLOG << "m_imageDirectoryList.size: " << m_imageDirectoryList.size();
+    //MACRO_THR_DLOG << "m_imageDirectoryList.size: " << m_imageDirectoryList.size();
     for(; m_idx < m_imageDirectoryList.size(); m_idx++)
     {
         if(m_isStop)
         {
-            MACRO_THR_DLOG << "isStop";
+            //MACRO_THR_DLOG << "isStop";
             return;
         }
-        MACRO_THR_DLOG << "Image: " << m_idx;
+        //MACRO_THR_DLOG << "Image: " << m_idx;
         // set Image to lblImage
         QPixmap image(m_imageDirectoryList.at(0));
         image = image.scaledToWidth(m_plblImageScreen->width());

@@ -53,11 +53,12 @@ private:
     QTimer *timerShowImage = nullptr;
 
     bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
-//    void showImage(const QString &path);
 
     bool m_isPlay;
     QList<QPoint> m_hightLightPoint;
     ccThreadShowImage threadShowImage;
+private:
+    void CreateRect(const QPoint &firstPoint, const QPoint &secondPoint, QRect &ret);
 public:
     explicit ccMapWidget(ccDataManager *model, QWidget *parent = 0);
     ~ccMapWidget();
