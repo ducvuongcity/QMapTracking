@@ -31,3 +31,4 @@ INCLUDEPATH += hdr \
     src \
     src/widget
 
+DEFINES += LOG_ENABLE

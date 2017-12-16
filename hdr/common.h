@@ -8,10 +8,15 @@
 #include <QRgb>
 #include <QtConcurrent/QtConcurrentRun>
 
-#define MACRO_THR_DLOG          qDebug()    << "[" << QThread::currentThreadId() << "][" \
+#ifdef LOG_ENABLE
+    #define MACRO_THR_DLOG          qDebug()    << "[" << QThread::currentThreadId() << "][" \
                                             << Q_FUNC_INFO << "]"
+#else
+    #define MACRO_THR_DLOG
+#endif
 
 #define MACRO_DLOG              qDebug()    << "[" << Q_FUNC_INFO << "]"
+
 
 #define MACRO_DEL_PTR(ptr)      if(!ptr) { \
                                     delete ptr; \

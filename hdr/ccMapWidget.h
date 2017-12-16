@@ -53,12 +53,11 @@ private:
     QTimer *timerShowImage = nullptr;
 
     bool determineMMSPointInsideSelectRegion(const QPoint &mmsPoint, const QPoint &firstPoint, const QPoint &secondPoint);
-    void showImage(const QString &path);
+//    void showImage(const QString &path);
 
     bool m_isPlay;
-
-    QStringList imageDirectoryList;
-
+    QList<QPoint> m_hightLightPoint;
+    ccThreadShowImage threadShowImage;
 public:
     explicit ccMapWidget(ccDataManager *model, QWidget *parent = 0);
     ~ccMapWidget();
@@ -78,7 +77,6 @@ private slots:
     void sltSet2DImageInfo();
     void sltMapMouseReleaseEvent(const QPoint &, const QPoint &);
     void sltResizeImageView(int pos, int index);
-    void sltShowImage();
 
 signals:
     void sgnEvent(EventList event, QString params);
