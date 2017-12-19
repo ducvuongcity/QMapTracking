@@ -5,22 +5,26 @@ ccQLabel::ccQLabel(QWidget *parent, Qt::WindowFlags f, bool rubberBand)
     : QLabel(parent, f)
     , m_usingRubberBand(rubberBand)
 {
+    MACRO_THR_DLOG << "m_usingRubberBand: " << m_usingRubberBand;
     m_pRubberBand = nullptr;
 }
 
 void ccQLabel::mousePressEvent(QMouseEvent *ev)
 {
 //    QToolTip::showText(ev->globalPos(), QString("%1, %2").arg(ev->x()).arg(ev->y()));
+    MACRO_THR_DLOG << "START ";
     emit sgnMousePressEvent(ev->globalPos(), ev->pos());
     if (m_usingRubberBand) {
         createRubberBand(ev);
     }
+    MACRO_THR_DLOG << "END ";
 }
 
 void ccQLabel::createRubberBand(QMouseEvent *ev)
 {
     if(m_usingRubberBand) {
         m_firstPoint = ev->pos();
+        m_secondPoint = m_firstPoint;
         if(nullptr == m_pRubberBand)
         {
             m_pRubberBand = new QRubberBand(QRubberBand::Rectangle, this);
@@ -32,6 +36,7 @@ void ccQLabel::createRubberBand(QMouseEvent *ev)
 
 void ccQLabel::mouseMoveEvent(QMouseEvent *ev)
 {
+    MACRO_THR_DLOG << "START ";
     if(m_usingRubberBand) {
         if(nullptr == m_pRubberBand)
         {
@@ -61,19 +66,24 @@ void ccQLabel::mouseMoveEvent(QMouseEvent *ev)
             m_pRubberBand->setGeometry(QRect(m_firstPoint, ev->pos()).normalized());
         }
     }
+    MACRO_THR_DLOG << "END";
 }
 
 void ccQLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
+    MACRO_THR_DLOG << "START ";
     if(m_usingRubberBand) {
         if(nullptr != m_pRubberBand)
         {
             m_pRubberBand->hide();
             emit sgnmouseReleaseEvent(m_firstPoint, m_secondPoint);
+            MACRO_THR_DLOG << "delete RubbleBand";
             delete m_pRubberBand;
             m_pRubberBand = nullptr;
+            m_firstPoint = m_secondPoint;
         }
     }
+    MACRO_THR_DLOG << "END";
 }
 
 ccQLabel::~ccQLabel()

@@ -198,6 +198,11 @@ void ccMapWidget::sltMapMouseReleaseEvent(const QPoint &firstPoint, const QPoint
     {
         return;
     }
+    if(firstPoint == secondPoint)
+    {
+        MACRO_THR_DLOG << "firstPoint == secondPoint";
+        return;
+    }
     // 0: remove prev hightlight
     QList<QPoint> &ListPixel = m_model->getListPixel();
     if(!m_hightLightPoint.isEmpty() && NULL != imgMap)
