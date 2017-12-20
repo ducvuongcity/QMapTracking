@@ -37,7 +37,7 @@ void ccThreadShowImage::showImage()
         }
         MACRO_THR_DLOG << "Image: " << m_idx;
         // set Image to lblImage
-        QPixmap image(m_imageDirectoryList.at(0));
+        QPixmap image(m_imageDirectoryList.at(m_idx));
         image = image.scaledToWidth(m_plblImageScreen->width());
         m_plblImageScreen->setPixmap(image);
         // show time
