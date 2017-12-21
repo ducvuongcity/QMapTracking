@@ -17,22 +17,26 @@ void ccController::sltEvenHandle(EventList event, QString params)
 
     switch (event) {
     case CC_EVT_HMI_READMMS_REQUEST:
-        QtConcurrent::run(m_model, m_model->analysisMMS, paramList[0]);
+//        QtConcurrent::run(m_model, m_model->analysisMMS, paramList[0]);
+        m_model->analysisMMS(params);
         break;
 
     case CC_EVT_HMI_READWORLDFILE_REQUEST:
-        QtConcurrent::run(m_model, m_model->analysisWorldFile, paramList[0]);
+//        QtConcurrent::run(m_model, m_model->analysisWorldFile, paramList[0]);
+        m_model->analysisWorldFile(params);
         break;
 
     case CC_EVT_MODEL_READMMS_RESPONSE:
     case CC_EVT_MODEL_READWORLDFILE_RESPONSE:
         if(paramList[0].toInt())
-            QtConcurrent::run(m_view, &ccMapWidget::renderMap);
+            m_view->renderMap();
+//            QtConcurrent::run(m_view, &ccMapWidget::renderMap);
         break;
     case CC_EVT_HMI_READ_2D_IMAGE_INFO:
         if(!params.isEmpty())
         {
-            QtConcurrent::run(m_model, m_model->notifyChange2DImageInfo, params);
+//            QtCon.current::run(m_model, m_model->notifyChange2DImageInfo, params);
+            m_model->notifyChange2DImageInfo(params);
         }
         break;
     default:

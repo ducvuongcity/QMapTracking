@@ -15,8 +15,9 @@ class ccDialog : public QDialog
 public:
     explicit ccDialog(QWidget *parent = 0);
     ~ccDialog();
-    QVBoxLayout *verticalLayout;
 
+private:
+    QVBoxLayout *verticalLayout;
     ccDataManager *model;
     ccMapWidget *view;
     ccController *control;

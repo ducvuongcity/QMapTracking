@@ -73,10 +73,10 @@ void ccMapWidget::signalMapping()
     QObject::connect(btnLoad2DInfo, SIGNAL(clicked(bool)), this, SLOT(sltSet2DImageInfo()));
 
     //image fit
-    QObject::connect(spliter, SIGNAL(splitterMoved(int,int)), this, SLOT(sltResizeImageView(int,int)), Qt::UniqueConnection);
+//    QObject::connect(spliter, SIGNAL(splitterMoved(int,int)), this, SLOT(sltResizeImageView(int,int)), Qt::UniqueConnection);
 
     //show image
-    QObject::connect(timerShowImage, SIGNAL(timeout()), this, SLOT(sltShowImage()), Qt::UniqueConnection);
+//    QObject::connect(timerShowImage, SIGNAL(timeout()), this, SLOT(sltShowImage()), Qt::UniqueConnection);
 }
 
 //find world file
